@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1001,
+    "balance": "5000.00",
+    "currency": "EUR",
+    "openingDate": "2023-01-01",
+    "status": "ACTIVE",
+    "card":10002
+  },
+  {
+    "id": 1002,
+    "balance": "1000.00",
+    "currency": "USD",
+    "openingDate": "2024-03-15",
+    "status": "ACTIVE",
+    "card": 10001
+  },
+  {
+    "id": 1003,
+    "balance": "2000.00",
+    "currency": "HUF",
+    "openingDate": "2022-10-05",
+    "status": "TERMINATED",
+    "card": 0
+  },
+  {
+    "id": 1004,
+    "balance": "0.00",
+    "currency": "EUR",
+    "openingDate": "2024-07-20",
+    "status": "TERMINATED",
+    "card": 10003
+  }
+]

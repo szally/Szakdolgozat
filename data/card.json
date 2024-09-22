@@ -1,0 +1,26 @@
+[
+  {
+    "id": 10001,
+    "customerName": "Nagy Sándor",
+    "expiryDate": "2023-02-15",
+    "type": "DEBIT",
+    "status": "ACTIVE",
+    "pinCode": 1234
+  },
+  {
+    "id": 10002,
+    "customerName": "Nagy Sándor",
+    "expiryDate": "2024-04-01",
+    "type": "CREDIT",
+    "status": "ACTIVE",
+    "pinCode": 5678
+  },
+  {
+    "id": 10003,
+    "customerName": "Kovács Anna",
+    "expiryDate": "2023-11-10",
+    "type": "DEBIT",
+    "status": "BLOCKED",
+    "pinCode": 9012
+  }
+]

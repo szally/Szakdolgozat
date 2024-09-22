@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "credentials": {
+      "username": "nagys",
+      "password": "ns-secret"
+    },
+    "name": "Nagy Sándor",
+    "birthPlace": "Nyíregyháza, Hungary",
+    "birthDate": "1985-05-15",
+    "mothersName": "Nagy Mária",
+    "idCardNumb": "HU1234567890",
+    "taxNumb": 23456789,
+    "email": "nagysandor@example.com",
+    "status": "NEW",
+    "accounts": [1003,1002],
+    "transactionList": [10004,10005]
+  },
+  {
+    "id": 2,
+    "credentials": {
+      "username": "kovacsa",
+      "password": "ka-secret"
+    },
+    "name": "Kovács Anna",
+    "birthPlace": "Miskolc, Hungary",
+    "birthDate": "1990-12-20",
+    "mothersName": "Kovács Éva",
+    "idCardNumb": "HU9876543210",
+    "taxNumb": 45678901,
+    "email": "kovacsanna@example.com",
+    "status": "BLOCKED",
+    "accounts": [1003,1004],
+    "transactionList": [10006]
+  }
+]
