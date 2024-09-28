@@ -18,11 +18,6 @@ public class TransactionsDTO {
     private String partnerName;
     private Long partnerAccountNumb;
     private String description;
-    private boolean isExpense;
     private TransactionStatus status;
     private Long account;
-
-    public boolean getIsExpense() {
-        return isExpense;
-    }
 }

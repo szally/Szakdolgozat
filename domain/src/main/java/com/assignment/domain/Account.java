@@ -1,9 +1,7 @@
 package com.assignment.domain;
 
 import lombok.*;
-import org.apache.catalina.core.StandardHost;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Data

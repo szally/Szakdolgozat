@@ -2,7 +2,6 @@ package com.assignment.domain;
 
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Data
@@ -20,10 +19,11 @@ public class Card {
     private Customer customer;
     private Account account;
 
-    public Card(Long id, String customerName, Date expiryDate, AccountAndCardStatus status, int pinCode) {
+    public Card(Long id, String customerName, Date expiryDate, CardType type, AccountAndCardStatus status, int pinCode) {
         this.id = id;
         this.customerName = customerName;
         this.expiryDate = expiryDate;
+        this.type = type;
         this.status = status;
         this.pinCode = pinCode;
     }

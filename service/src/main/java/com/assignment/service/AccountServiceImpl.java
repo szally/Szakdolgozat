@@ -21,45 +21,12 @@ public class AccountServiceImpl implements AccountService{
     }
 
     public List<Account> getAllAccounts() {
+        dataStore.loadData();
         return dataStore.getAccounts();
     }
     @Override
     public List<Account> getAccountDetails(Customer customer) {
-        List<Account> allAccounts = getAllAccounts();
-        //List<Account> accountList = new ArrayList<>();
-
-        /*if (customer.getAccounts().isEmpty()) {
-            System.out.println("Customer has no associated accounts.");
-            return accountList;
-        }
-
-        for (Account accountInAll : allAccounts) {
-            for (Account accountInCustomer : customer.getAccounts()) {
-                if (accountInAll.getId().equals(accountInCustomer.getId())) {
-                    if (!accountInAll.getStatus().equals(AccountAndCardStatus.TERMINATED)) {
-                        accountList.add(accountInAll);
-                        break;
-                    }
-                }
-            }
-        }*/
-
-        List<Account> accountList = allAccounts.stream()
-                .filter(account -> customer
-                        .getAccounts()
-                        .stream()
-                        .anyMatch(accountCustomer -> accountCustomer
-                                .getId()
-                                .equals(accountCustomer
-                                        .getId())))
-                .collect(Collectors.toList());
-
-        if (accountList.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        customer.setAccounts(accountList);
-        return accountList;
+        return customer.getAccounts();
     }
 
     @Override
@@ -67,6 +34,7 @@ public class AccountServiceImpl implements AccountService{
         List<Account> accountList = getAllAccounts();
         LocalDate openingDate = LocalDate.now();
         Account account = new Account();
+        account.setId((long) (getAllAccounts().size() + 1));
         account.setCustomer(customer);
         account.setBalance(0);
         account.setCurrency(selectedCurrency);
@@ -74,9 +42,10 @@ public class AccountServiceImpl implements AccountService{
         account.setStatus(AccountAndCardStatus.ACTIVE);
 
         accountList.add(account);
-
+        customer.getAccounts().add(account);
         return account;
     }
+
 
     @Override
     public void blockAccount(Account account) {

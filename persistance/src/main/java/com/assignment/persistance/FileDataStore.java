@@ -1,13 +1,7 @@
 package com.assignment.persistance;
 
-import com.assignment.domain.Account;
-import com.assignment.domain.Card;
-import com.assignment.domain.Customer;
-import com.assignment.domain.Transactions;
-import com.assignment.persistance.dto.AccountDTO;
-import com.assignment.persistance.dto.CardDTO;
-import com.assignment.persistance.dto.CustomerDTO;
-import com.assignment.persistance.dto.TransactionsDTO;
+import com.assignment.domain.*;
+import com.assignment.persistance.dto.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +20,8 @@ public class FileDataStore {
     private static final String TRANSACTION_FILE = "transactions.json";
     private static final String CARD_FILE = "card.json";
 
+    private static final String EXCHANGE_RATE_FILE = "exchange_rate.json";
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private List<Customer> customers;
@@ -33,10 +29,14 @@ public class FileDataStore {
     private List<Card> cards;
     private List<Transactions> transactions;
 
+    private List<ExchangeRate> exchangeRates;
+
     private CustomerDTO[] customerDTO;
     private AccountDTO[] accountDTO;
     private CardDTO[] cardDTO;
     private TransactionsDTO[] transactionsDTO;
+
+    private ExchangeRateDTO[] exchangeRateDTO;
 
     private final String basePath;
 
@@ -50,11 +50,13 @@ public class FileDataStore {
     public void loadData() {
         objectMapper.findAndRegisterModules();
 
+       // exchangeRateDTO = readExchangeRate();
         cardDTO = readCards();
         accountDTO = readAccounts();
         transactionsDTO = readTransactions();
         customerDTO = readCustomers();
 
+        //exchangeRates = convertExchangRates(exchangeRateDTO);
         cards = convertCards(cardDTO);
         accounts = convertAccounts(accountDTO);
         transactions = convertTransactions(transactionsDTO);
@@ -82,6 +84,20 @@ public class FileDataStore {
         return customers;
     }
 
+    public List<ExchangeRate> getExchangeRates() {
+
+        return exchangeRates;
+    }
+
+
+    private ExchangeRateDTO[] readExchangeRate() {
+        try {
+            return objectMapper.readValue(new File(getPath(EXCHANGE_RATE_FILE)),
+                    ExchangeRateDTO[].class);
+        } catch (IOException e) {
+            throw new RuntimeException("IO error happened while reading personal properties: " + e.getMessage(), e);
+        }
+    }
     private CardDTO[] readCards() {
         try {
             return objectMapper.readValue(new File(getPath(CARD_FILE)),
@@ -118,6 +134,20 @@ public class FileDataStore {
     }
 
 
+    private List<ExchangeRate> convertExchangRates(ExchangeRateDTO[] exchangeRates){
+
+        List<ExchangeRate> exchangeRateList = new ArrayList<>();
+
+        for(ExchangeRateDTO dto : exchangeRates){
+            exchangeRateList.add(new ExchangeRate(
+                    dto.getRates())
+            );
+        }
+
+        return exchangeRateList;
+    }
+
+
     private List<Card> convertCards(CardDTO[] cards){
 
         List<Card> cardList = new ArrayList<>();
@@ -127,6 +157,7 @@ public class FileDataStore {
                     dto.getId(),
                     dto.getCustomerName(),
                     dto.getExpiryDate(),
+                    dto.getType(),
                     dto.getStatus(),
                     dto.getPinCode()
             ));
@@ -139,6 +170,7 @@ public class FileDataStore {
     private List<Account> convertAccounts(AccountDTO[] accounts){
 
         List<Account> accountList = new ArrayList<>();
+
 
         for(AccountDTO dto : accounts){
             //Card card = getCardById(dto.getCard());
@@ -170,7 +202,6 @@ public class FileDataStore {
                     dto.getPartnerName(),
                     dto.getPartnerAccountNumb(),
                     dto.getDescription(),
-                    dto.getIsExpense(),
                     dto.getStatus(),
                     account
             ));
@@ -222,7 +253,7 @@ public class FileDataStore {
     }
 
 
-    private Card getCardById(Long cardid) {
+    public Card getCardById(Long cardid) {
         Card searchedCard = null;
         for (Card card : getCards()) {
             if (card.getId().equals(cardid)) {
@@ -234,7 +265,7 @@ public class FileDataStore {
         return searchedCard;
     }
 
-    private Account getAccountById(Long accountId) {
+    public Account getAccountById(Long accountId) {
         Account searchedAccount = null;
         for (Account account : accounts) {
             if (account.getId().equals(accountId)) {
@@ -246,7 +277,7 @@ public class FileDataStore {
         return searchedAccount;
     }
 
-    private Transactions getTransactionById(Long transactionId) {
+    public Transactions getTransactionById(Long transactionId) {
         Transactions searchedTransaction = null;
         for (Transactions transaction : transactions) {
             if (transaction.getId().equals(transactionId)) {
@@ -269,6 +300,18 @@ public class FileDataStore {
         return searchedCustomer;
     }
 
+
+    public Customer findCustomerById(Long id) {
+        Customer searchedCustomer = null;
+        for (Customer customer : customers) {
+            if (customer.getId().equals(id)) {
+                searchedCustomer = customer;
+                break;
+            }
+
+        }
+        return searchedCustomer;
+    }
 
     public void writeCardJson() {
         try (FileWriter file = new FileWriter("data\\card.json", StandardCharsets.UTF_8)) {
@@ -340,7 +383,6 @@ public class FileDataStore {
                 file.write("\t\"partnerName\": " + transactions.get(i).getPartnerName() + ",\n");
                 file.write("\t\"partnerAccountNumb\": " + transactions.get(i).getPartnerAccountNumb() + ",\n");
                 file.write("\t\"description\": " + transactions.get(i).getDescription() + ",\n");
-                file.write("\t\"isExpense\": " + transactions.get(i).getIsExpense() + ",\n");
                 file.write("\t\"status\": " + transactions.get(i).getStatus() + ",\n");
                 file.write("\t\"account\": " + transactions.get(i).getAccount() + ",\n");
                 file.write("\t}\n");
@@ -420,15 +462,5 @@ public class FileDataStore {
         }
     }
 
-    public Customer findCustomerById(Long id) {
-        Customer searchedCustomer = null;
-        for (Customer customer : customers) {
-            if (customer.getId().equals(id)) {
-                searchedCustomer = customer;
-                break;
-            }
 
-        }
-        return searchedCustomer;
-    }
 }

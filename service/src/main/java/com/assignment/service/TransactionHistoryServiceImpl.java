@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -25,33 +26,17 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     }
     @Override
     public List<Transactions> getTransactionHistory(Customer customer){
-        List<Transactions> allTransactions = getAllTransactions();
-        //List<Transactions> transactionsList = new ArrayList<>();
 
-      /*  if (customer.getTransactionList().isEmpty()) {
-            System.out.println("Customer has no associated accounts.");
-            return transactionsList;
-        }*/
-
-      /*  for (Transactions transactions : allTransactions) {
-            for (Transactions transactionCustomer : customer.getTransactionList()) {
-                if (transactions.getId().equals(transactionCustomer.getId())) {
-                        transactionsList.add(transactions);
-                        break;
-                    }
-                }
-            }*/
-
-        List<Transactions> transactionsList = allTransactions.stream()
-                .filter(transaction -> customer.getTransactionList().stream()
-                        .anyMatch(transactionCustomer -> transaction.getId().equals(transactionCustomer.getId())))
-                .collect(Collectors.toList());
+        List<Transactions> transactionsList = customer.getTransactionList();
 
         if (transactionsList.isEmpty()) {
             return Collections.emptyList();
         }
 
-        customer.setTransactionList(transactionsList);
+        transactionsList.stream()
+                .filter(transactions -> transactions.getBookingDate().equals(LocalDate.now()))
+                .peek(transactions -> transactions.setStatus(TransactionStatus.BOOKED))
+                .collect(Collectors.toList());
         return transactionsList;
     }
 
@@ -81,7 +66,6 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
                 sb.append(transaction.getPartnerName()).append(",");
                 sb.append(transaction.getPartnerAccountNumb()).append(",");
                 sb.append(transaction.getDescription()).append(",");
-                sb.append(transaction.getIsExpense()).append(",");
                 sb.append(transaction.getStatus()).append(",");
                 sb.append(transaction.getAccount()).append("\n");
                 writer.write(sb.toString());

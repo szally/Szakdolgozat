@@ -13,7 +13,7 @@
     "taxNumb": 23456789,
     "email": "nagysandor@example.com",
     "status": "NEW",
-    "accounts": [1003,1002],
+    "accounts": [1001,1002],
     "transactionList": [10004,10005]
   },
   {

@@ -10,8 +10,8 @@ import java.util.List;
 public interface CardService {
     List<Card> getCardDetails(Customer customer);
     void blockCard(Card card);
-    void terminatekCard(Card card);
-    Card requestNewCard(Customer customer, String customerName, CardType type);
-    void updateCardDetails(Customer customer, int pinCode);
+    void terminateCard(Card card);
+    Card requestNewCard(Customer customer, String customerName, String type, int pin);
+    Card updateCardDetails(Customer customer, int pinCode, Card card);
     //void reportLostOrStolenCard();
 }
