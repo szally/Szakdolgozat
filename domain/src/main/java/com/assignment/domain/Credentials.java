@@ -10,6 +10,7 @@ import javax.persistence.Embeddable;
 @EqualsAndHashCode
 @Getter
 @Setter
+@Embeddable
 public class Credentials {
     private String username;
     private String password;

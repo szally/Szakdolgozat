@@ -2,9 +2,10 @@ package com.assignment.service;
 
 import com.assignment.domain.Credentials;
 import com.assignment.domain.Customer;
-import com.assignment.domain.CustomerStatus;
-import com.assignment.persistance.FileDataStore;
+import com.assignment.repository.CustomerRepository;
 import com.assignment.service.exceptions.LoginFailedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,17 +13,15 @@ import java.util.List;
 import static com.assignment.domain.CustomerStatus.ACTIVE;
 import static com.assignment.domain.CustomerStatus.NEW;
 
+@Service()
 public class AuthencticationServiceImpl implements AuthenticationService{
 
-    private final FileDataStore dataStore ;
+    @Autowired
+    private CustomerRepository customerRepository;
 
-    public AuthencticationServiceImpl(FileDataStore fileDataStore) {
-        this.dataStore = fileDataStore;
-
-    }
     @Override
     public Customer login(Credentials credentials) throws LoginFailedException {
-        Customer customer = dataStore.getCustomerByCredentials(credentials.getUsername());
+        Customer customer = customerRepository.findByCredentialsUsername(credentials.getUsername());
 
         if (customer != null && customer.getCredentials().getPassword().equals(credentials.getPassword())) {
             System.out.println("Login success yaay!!");

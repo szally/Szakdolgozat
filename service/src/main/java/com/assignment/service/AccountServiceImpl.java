@@ -3,7 +3,9 @@ package com.assignment.service;
 import com.assignment.domain.Account;
 import com.assignment.domain.AccountAndCardStatus;
 import com.assignment.domain.Customer;
-import com.assignment.persistance.FileDataStore;
+import com.assignment.repository.AccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -13,28 +15,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class AccountServiceImpl implements AccountService{
-    private final FileDataStore dataStore ;
-
-    public AccountServiceImpl(FileDataStore dataStore) {
-        this.dataStore = dataStore;
-    }
-
-    public List<Account> getAllAccounts() {
-        dataStore.loadData();
-        return dataStore.getAccounts();
-    }
+    @Autowired
+    private AccountRepository accountRepository;
     @Override
     public List<Account> getAccountDetails(Customer customer) {
-        return customer.getAccounts();
+
+        return accountRepository.findAccountByCustomer(customer);
     }
 
     @Override
     public Account openNewAccount(Customer customer, String selectedCurrency) {
-        List<Account> accountList = getAllAccounts();
+        List<Account> accountList = accountRepository.findAll();
         LocalDate openingDate = LocalDate.now();
         Account account = new Account();
-        account.setId((long) (getAllAccounts().size() + 1));
+        account.setId((long) (accountList.size() + 1));
         account.setCustomer(customer);
         account.setBalance(0);
         account.setCurrency(selectedCurrency);

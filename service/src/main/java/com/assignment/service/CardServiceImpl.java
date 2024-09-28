@@ -1,27 +1,22 @@
 package com.assignment.service;
 
 import com.assignment.domain.*;
-import com.assignment.persistance.FileDataStore;
+import com.assignment.repository.CardRepositroy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class CardServiceImpl implements CardService {
 
-    private final FileDataStore dataStore;
+    @Autowired
+    private CardRepositroy cardRepositroy;
 
-    public CardServiceImpl(FileDataStore dataStore) {
-        this.dataStore = dataStore;
-    }
-
-    public List<Card> getAllCards() {
-        dataStore.loadData();
-        return dataStore.getCards();
-    }
 
     @Override
     public List<Card> getCardDetails(Customer customer) {
@@ -73,10 +68,10 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public Card requestNewCard(Customer customer, String customerName, String type, int pin) {
-        List<Card> cardList = getAllCards();
+        List<Card> cardList = cardRepositroy.findAll();
         LocalDate expiryDate = LocalDate.now().plusYears(4);
         Card card = new Card();
-        card.setId((long) (getAllCards().size() + 1));
+        card.setId((long) (cardList.size() + 1));
         card.setCustomer(customer);
         card.setPinCode(pin);
         card.setCustomerName(customer.getName());

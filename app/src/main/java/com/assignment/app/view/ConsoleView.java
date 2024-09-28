@@ -1,11 +1,13 @@
 package com.assignment.app.view;
 
 import com.assignment.domain.*;
-import com.assignment.persistance.FileDataStore;
+import com.assignment.repository.AccountRepository;
+import com.assignment.repository.CardRepositroy;
 import com.assignment.service.AccountService;
 import com.assignment.service.AccountServiceImpl;
-import com.assignment.service.CardService;
 import com.assignment.service.CardServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 import java.util.Scanner;
@@ -14,12 +16,23 @@ import static com.assignment.domain.AccountAndCardStatus.ACTIVE;
 import static com.assignment.domain.AccountAndCardStatus.TERMINATED;
 import static com.assignment.domain.CustomerStatus.BLOCKED;
 
+
 public class ConsoleView {
 
     Scanner sc = new Scanner(System.in);
-    private final FileDataStore dataStore = new FileDataStore("data");
-    private AccountService accountService = new AccountServiceImpl(dataStore);
-    private CardServiceImpl cardService = new CardServiceImpl(dataStore);
+
+    @Autowired(required=true)
+    @Qualifier("accountServiceImpl")
+    private AccountServiceImpl accountService;
+
+    @Autowired(required=true)
+    @Qualifier("cardServiceImpl")
+    private CardServiceImpl cardService;
+/*
+    @Autowired
+    private CardRepositroy cardRepositroy;
+    @Autowired
+    private AccountRepository accountRepository;*/
 
     public Credentials loginView() {
         System.out.println("Welcome to LoremIpsum Bank\n");
@@ -77,14 +90,14 @@ public class ConsoleView {
         System.out.println("\nList of all your accounts: \n");
 
         for (Account account : accounts) {
-                System.out.println("\n-" + account.getId() +
-                        "\n  Balance: " + account.getBalance() + " " + account.getCurrency());
+            System.out.println("\n-" + account.getId() +
+                    "\n  Balance: " + account.getBalance() + " " + account.getCurrency());
 
         }
 
         return accounts;
     }
-
+/*
     public void viewOpenNewAccount(Customer customer) {
 
         System.out.println("Opening a new account for customer:");
@@ -108,7 +121,7 @@ public class ConsoleView {
         listAllAccounts(customer);
         System.out.print("Enter account ID to block: ");
         long accountIdToBlock = sc.nextLong();
-        Account accountToBlock = dataStore.getAccountById(accountIdToBlock);
+        Account accountToBlock = accountRepository.getAccountById(accountIdToBlock);
         if (accountToBlock != null && !accountToBlock.getStatus().equals(BLOCKED)) {
             accountService.blockAccount(accountToBlock);
             System.out.println("Account blocked successfully.");
@@ -122,7 +135,7 @@ public class ConsoleView {
         listAllAccounts(customer);
         System.out.print("Enter account ID to unblock: ");
         long accountIdToUnBlock = sc.nextLong();
-        Account accountToUnBlock = dataStore.getAccountById(accountIdToUnBlock);
+        Account accountToUnBlock = accountRepository.getAccountById(accountIdToUnBlock);
         if (accountToUnBlock != null && accountToUnBlock.getStatus().equals(BLOCKED)) {
             accountService.unBlockAccount(accountToUnBlock);
             System.out.println("Account unblocked successfully.");
@@ -135,7 +148,7 @@ public class ConsoleView {
         listAllAccounts(customer);
         System.out.print("Enter account ID to close: ");
         long accountIdToClose = sc.nextLong();
-        Account accountToClose = dataStore.getAccountById(accountIdToClose);
+        Account accountToClose = accountRepository.getAccountById(accountIdToClose);
         if (accountToClose != null && !accountToClose.getStatus().equals(TERMINATED)) {
             accountService.closeAccount(accountToClose);
             System.out.println("Account closed successfully.");
@@ -146,10 +159,9 @@ public class ConsoleView {
 
 
     public void changePin(Customer customer) {
-        dataStore.loadData();
         System.out.print("Enter card ID to change pin: ");
         long changePin = sc.nextLong();
-        Card cardToChangePin = dataStore.getCardById(changePin);
+        Card cardToChangePin = cardRepositroy.getCardById(changePin);
         System.out.print("Set a PIN code ");
         int pin = sc.nextInt();
         cardService.updateCardDetails(customer, pin, cardToChangePin);
@@ -172,34 +184,40 @@ public class ConsoleView {
     }
 
     public void requestNewCard(Customer customer) {
-        dataStore.loadData();
         System.out.print("Enter the card type (DEBIT/CREDIT): ");
         String type = sc.next().toUpperCase();
-        System.out.print("Set a PIN code ");
+        System.out.print("Set a PIN code (4 digits): ");
         int pin = sc.nextInt();
+
+        // Validate PIN format (optional)
+        if (String.valueOf(pin).length() != 4) {
+            System.out.println("Invalid PIN format. Please enter a 4-digit PIN.");
+            return;
+        }
+
         Card newCard = cardService.requestNewCard(customer, customer.getName(), type, pin);
+       // cardService.saveCard(newCard); // Persist the new card
         System.out.println("New card request successful: " + newCard);
         listCards(customer);
-    }//NEM JÓ!
+    }
 
     public void blockCard(Customer customer) {
-        dataStore.loadData();
         listCards(customer);
         System.out.print("Enter the card ID to block: ");
         long cardId = sc.nextLong();
-        Card card = dataStore.getCardById(cardId);
+        Card card = cardRepositroy.getCardById(cardId);
         cardService.blockCard(card);
         listCards(customer);
     }
 
     public void terminateCard(Customer customer) {
-        dataStore.loadData();
         listCards(customer);
         System.out.print("Enter the card ID to terminate: ");
         long cardId = sc.nextLong();
-        Card card = dataStore.getCardById(cardId);
+        Card card = cardRepositroy.getCardById(cardId);
         cardService.terminateCard(card);
         listCards(customer);
-    }
+    }*/
+
 
 }

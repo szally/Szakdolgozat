@@ -1,30 +1,19 @@
 package com.assignment.service;
 
 import com.assignment.domain.*;
-import com.assignment.persistance.FileDataStore;
+import com.assignment.repository.TransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
+@Service
 public class TransferServiceImpl implements TransferService {
 
-    private final FileDataStore dataStore;
-
-    public TransferServiceImpl(FileDataStore dataStore) {
-        this.dataStore = dataStore;
-    }
-
-    public List<Transactions> getAllTransactions() {
-        return dataStore.getTransactions();
-    }
-
-    public List<ExchangeRate> getAllExcangeRates() {
-        return dataStore.getExchangeRates();
-    }
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     //TO-DO: add exchange rate class and JSON
     @Override
@@ -92,7 +81,7 @@ public class TransferServiceImpl implements TransferService {
 
         transaction.setAccount(sourceAccount);
 
-        transaction.setId((long) (getAllTransactions().size() + 1));
+        transaction.setId((long) (transactionRepository.findAll().size() + 1));
         transaction.setAmount(amount);
         transaction.setCurrency(currency);
         transaction.setCreationDate(Date.from(creationDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -101,10 +90,10 @@ public class TransferServiceImpl implements TransferService {
         transaction.setDescription(description);
         transaction.setStatus(TransactionStatus.PROCESSED);
 
-        if(!sourceAccount.getCurrency().equals(transaction.getCurrency())){
+       /* if(!sourceAccount.getCurrency().equals(transaction.getCurrency())){
             getExchange(sourceAccount.getCurrency(),transaction.getCurrency(),transaction); //Nem működik, de egyelőre jó placeholder.
         }
-
+*/
         if (sourceAccount.getBalance() < amount) {
             transaction.setStatus(TransactionStatus.FAILED);
             throw new IllegalArgumentException("No enough balance");
@@ -115,7 +104,7 @@ public class TransferServiceImpl implements TransferService {
         return transaction;
     }
 
-    public void getExchange(String from, String to, Transactions transaction){
+  /*  public void getExchange(String from, String to, Transactions transaction){
 
         ExchangeRate exchangeRate = getExchangeRate(from, to);
 
@@ -123,8 +112,8 @@ public class TransferServiceImpl implements TransferService {
         transaction.setAmount(convertedAmount);
         transaction.setCurrency(to);
     }
-
-    private ExchangeRate getExchangeRate(String from, String to) {
+*/
+  /*  private ExchangeRate getExchangeRate(String from, String to) {
         List<ExchangeRate> allExchangeRates = getAllExcangeRates();
 
         for (ExchangeRate rate : allExchangeRates) {
@@ -135,5 +124,5 @@ public class TransferServiceImpl implements TransferService {
 
         // Handle the case where the exchange rate is not found
         throw new IllegalArgumentException("Exchange rate not found for currencies: " + from + " and " + to);
-    }
+    }*/
 }

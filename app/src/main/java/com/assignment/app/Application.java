@@ -3,8 +3,9 @@ package com.assignment.app;
 import com.assignment.app.view.ConsoleView;
 import com.assignment.domain.Account;
 import com.assignment.domain.Customer;
-import com.assignment.persistance.FileDataStore;
+import com.assignment.repository.CustomerRepository;
 import com.assignment.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -13,27 +14,23 @@ import java.util.Scanner;
 
 @Component
 public class Application implements CommandLineRunner {
-
-    private final FileDataStore dataStore = new FileDataStore("data");
-    private final AuthencticationServiceImpl authencticationService = new AuthencticationServiceImpl(dataStore);
-    private final CustomerDetailsServiceImpl customerDetailsService = new CustomerDetailsServiceImpl(dataStore);
-    private final AccountServiceImpl accountService = new AccountServiceImpl(dataStore);
-    private final CardServiceImpl cardService = new CardServiceImpl(dataStore);
-    private final TransactionHistoryServiceImpl transactionHistoryService = new TransactionHistoryServiceImpl(dataStore);
-    private final TransferServiceImpl transferService = new TransferServiceImpl(dataStore);
-
     private final ConsoleView consoleView = new ConsoleView();
 
     public Scanner scanner = new Scanner(System.in);
 
     private Customer loggedInCustomer = null;
 
+    @Autowired
+    AuthencticationServiceImpl authencticationService;
+
+    @Autowired
+    CustomerRepository customerRepository;
     @Override
     public void run(String... args) throws Exception {
-        dataStore.loadData();
+        //dataStore.loadData();
+        System.out.println(customerRepository.findAll());
         loggedInCustomer = authencticationService.login(consoleView.loginView());
         consoleView.statisticsView(loggedInCustomer);
-        List<Account> accounts = accountService.getAccountDetails(loggedInCustomer);
         boolean quit = true;
 
         while (quit) {
@@ -44,7 +41,7 @@ public class Application implements CommandLineRunner {
                     manageAccount(loggedInCustomer);
                     break;
                 case 2:
-                    manageCards(loggedInCustomer);
+                    //manageCards(loggedInCustomer);
                     break;
             }
         }
@@ -52,7 +49,6 @@ public class Application implements CommandLineRunner {
 
     }
     public void manageAccount(Customer customer) {
-        dataStore.loadData();
         System.out.println("\nAccount Management:");
         System.out.println("1 - List all accounts");
         System.out.println("2 - Open new account");
@@ -75,7 +71,7 @@ public class Application implements CommandLineRunner {
             case 1:
                 consoleView.listAllAccounts(loggedInCustomer);
                 break;
-            case 2:
+/*            case 2:
                 consoleView.viewOpenNewAccount(loggedInCustomer);
                 break;
             case 3:
@@ -86,15 +82,14 @@ public class Application implements CommandLineRunner {
                 break;
             case 5:
                 consoleView.closeAccountView(loggedInCustomer);
-                break;
+                break;*/
             case 6:
                 // Do nothing, user wants to go back to main menu
                 break;
         }
     }
 
-    public void manageCards(Customer loggedInCustomer) {
-        dataStore.loadData();
+   /* public void manageCards(Customer loggedInCustomer) {
         while (true) {
             System.out.println("\nCard Management:");
             System.out.println("1. List my cards");
@@ -128,5 +123,5 @@ public class Application implements CommandLineRunner {
                     System.out.println("Invalid choice");
             }
         }
-    }
+    }*/
 }

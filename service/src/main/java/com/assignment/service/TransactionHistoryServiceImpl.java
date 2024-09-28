@@ -1,9 +1,9 @@
 package com.assignment.service;
 
 import com.assignment.domain.*;
-import com.assignment.persistance.FileDataStore;
 import com.assignment.service.exceptions.TransactionNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,16 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class TransactionHistoryServiceImpl implements TransactionHistoryService{
-    private final FileDataStore dataStore ;
-
-    public TransactionHistoryServiceImpl(FileDataStore dataStore) {
-        this.dataStore = dataStore;
-    }
-
-    public List<Transactions> getAllTransactions() {
-        return dataStore.getTransactions();
-    }
     @Override
     public List<Transactions> getTransactionHistory(Customer customer){
 

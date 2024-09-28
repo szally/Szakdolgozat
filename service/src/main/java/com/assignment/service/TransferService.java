@@ -2,7 +2,9 @@ package com.assignment.service;
 
 import com.assignment.domain.Customer;
 import com.assignment.domain.Transactions;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface TransferService {
     void transferBetweenOwnAccounts(Long sourceAccountNumber, Long destinationAccountNumber, double amount, Transactions transaction, String currency, String description, Customer customer);
 
