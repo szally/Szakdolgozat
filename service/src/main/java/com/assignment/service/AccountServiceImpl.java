@@ -5,6 +5,7 @@ import com.assignment.domain.AccountAndCardStatus;
 import com.assignment.domain.Customer;
 import com.assignment.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Qualifier("accountServiceImpl")
 public class AccountServiceImpl implements AccountService{
     @Autowired
     private AccountRepository accountRepository;
@@ -30,7 +32,6 @@ public class AccountServiceImpl implements AccountService{
         List<Account> accountList = accountRepository.findAll();
         LocalDate openingDate = LocalDate.now();
         Account account = new Account();
-        account.setId((long) (accountList.size() + 1));
         account.setCustomer(customer);
         account.setBalance(0);
         account.setCurrency(selectedCurrency);
@@ -39,22 +40,27 @@ public class AccountServiceImpl implements AccountService{
 
         accountList.add(account);
         customer.getAccounts().add(account);
+
+        accountRepository.save(account);
         return account;
     }
 
 
     @Override
-    public void blockAccount(Account account) {
+    public void blockAccount(Account account) {;
         account.setStatus(AccountAndCardStatus.BLOCKED);
+        accountRepository.save(account);
     }
 
     @Override
     public void unBlockAccount(Account account) {
         account.setStatus(AccountAndCardStatus.ACTIVE);
+        accountRepository.save(account);
     }
 
     @Override
     public void closeAccount(Account account) {
         account.setStatus(AccountAndCardStatus.TERMINATED);
+        accountRepository.save(account);
     }
 }

@@ -7,8 +7,8 @@ ALTER TABLE customer ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM customer)
 
 INSERT INTO card (id, customer_name, expiry_date, pin_code, status, type, customer_id)
 VALUES
- (10001, 'Nagy Sándor', '2023-02-15', 1234, 'ACTIVE', 'DEBIT', 1),
- (10002, 'Nagy Sándor', '2024-04-01', 5678, 'ACTIVE', 'CREDIT', 1),
+ (10001, 'Nagy Sándor', '2023-02-15', 1234, 'ACTIVE', 'DEBIT',1),
+ (10002, 'Nagy Sándor', '2024-04-01', 5678, 'ACTIVE', 'CREDIT',1),
  (10003, 'Kovács Anna', '2023-11-10', 9012, 'BLOCKED', 'DEBIT', 2);
 ALTER TABLE card ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM card) + 1;
 
@@ -25,5 +25,5 @@ INSERT INTO transactions (id, amount, currency, creation_date, booking_date, par
 VALUES
   (10004, 100.00, 'EUR', '2023-02-15', '2023-02-20', 'Grocery Store', 1234567890, 'Groceries', 'BOOKED', 1, 1001),
   (10005, 50.00, 'USD', '2024-04-01', '2024-04-05', 'Restaurant', 9876543210, 'Dinner', 'PROCESSED', 1, 1002),
-  (10006, 200.00, 'HUF', '2023-11-10', '2023-11-15', 'Salary', '0000000000', 'Income', 'FAILED', 2, 1004);
+  (10006, 200.00, 'HUF', '2023-11-10', NULL, 'Salary', '0000000000', 'Income', 'FAILED', 2, 1004);
 ALTER TABLE transactions ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM transactions) + 1;

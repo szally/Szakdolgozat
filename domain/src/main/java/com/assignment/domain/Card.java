@@ -30,8 +30,8 @@ public class Card {
     private int pinCode;
     @ManyToOne
     private Customer customer;
-    @OneToOne
-    private Account account;
+/*    @OneToOne
+    private Account account;*/
 
     public Card(Long id, String customerName, Date expiryDate, CardType type, AccountAndCardStatus status, int pinCode) {
         this.id = id;

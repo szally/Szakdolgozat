@@ -1,5 +1,6 @@
 package com.assignment.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -36,8 +37,10 @@ public class Transactions {
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
     @ManyToOne
+    @JsonIgnore
     private Customer customer;
     @ManyToOne
+    @JsonIgnore
     private Account account;
 
     public Transactions(Long id, double amount, String currency, Date creationDate, Date bookingDate, String partnerName, Long partnerAccountNumb, String description, TransactionStatus status, Account account) {

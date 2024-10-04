@@ -1,17 +1,22 @@
 package com.assignment.service;
 
 import com.assignment.domain.Customer;
+import com.assignment.repository.CustomerRepository;
 import com.assignment.service.exceptions.InvalidPasswordException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerDetailsServiceImpl implements CustomerDetailsService{
 
+    @Autowired
+    CustomerRepository customerRepository;
     @Override
     public Customer updateCustomerDetails(Customer customer,String name, String idCardNumb, String email) {
         customer.setName(name);
         customer.setIdCardNumb(idCardNumb);
         customer.setEmail(email);
+        customerRepository.save(customer);
         return customer;
     }
 
@@ -20,13 +25,16 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService{
         if (!isValidPassword(newPassword)) {
             throw new InvalidPasswordException("Invalid password format. Please ensure it meets the requirements.");
         }
+
         customer.getCredentials().setPassword(newPassword);
+
+        customerRepository.save(customer);
 
         return customer;
     }
 
     private boolean isValidPassword(String password) {
         return password.length() >= 8
-                && password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)");
+                && password.matches("(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
     }
 }

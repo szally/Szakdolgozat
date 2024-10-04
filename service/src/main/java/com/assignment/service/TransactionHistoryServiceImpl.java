@@ -59,7 +59,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
                 sb.append(transaction.getPartnerAccountNumb()).append(",");
                 sb.append(transaction.getDescription()).append(",");
                 sb.append(transaction.getStatus()).append(",");
-                sb.append(transaction.getAccount()).append("\n");
+                sb.append(transaction.getAccount().getId()).append("\n");
                 writer.write(sb.toString());
             }
         } catch (IOException e) {
