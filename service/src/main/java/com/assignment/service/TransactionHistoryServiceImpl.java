@@ -1,16 +1,13 @@
 package com.assignment.service;
 
 import com.assignment.domain.*;
-import com.assignment.service.exceptions.TransactionNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +21,6 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         if (transactionsList.isEmpty()) {
             return Collections.emptyList();
         }
-
-        transactionsList.stream()
-                .filter(transactions -> transactions.getBookingDate().equals(LocalDate.now()))
-                .peek(transactions -> transactions.setStatus(TransactionStatus.BOOKED))
-                .collect(Collectors.toList());
         return transactionsList;
     }
 

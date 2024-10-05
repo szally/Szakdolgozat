@@ -28,19 +28,12 @@ public class Account {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private AccountAndCardStatus status;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private IbanCodes ibanCodes;
     @ManyToOne
     private Customer customer;
     @OneToOne
     private Card card;
     @OneToMany(mappedBy = "id")
     private List<Transactions> transactionsList;
-
-    public Account(Long id, double balance, String currency, Date openingDate, AccountAndCardStatus status, Card card) {
-        this.id = id;
-        this.balance = balance;
-        this.currency = currency;
-        this.openingDate = openingDate;
-        this.status = status;
-        this.card = card;
-    }
 }

@@ -1,9 +1,8 @@
 package com.assignment.domain;
 
 import lombok.*;
-import javax.persistence.*;
-import java.math.BigDecimal;
 
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -12,18 +11,18 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "exchange_rates")
-public class ExchangeRate {
+@Table(name = "partner_banks")
+public class PartnerBank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String baseCurrency;
+    private String name;
 
     @Column(nullable = false)
-    private String targetCurrency;
+    private String swiftCode;
 
-    @Column(nullable = false, precision = 10, scale = 6)
-    private double rate;
+    @Column
+    private double transferFeeInEUR;
 }

@@ -42,17 +42,4 @@ public class Transactions {
     @ManyToOne
     @JsonIgnore
     private Account account;
-
-    public Transactions(Long id, double amount, String currency, Date creationDate, Date bookingDate, String partnerName, Long partnerAccountNumb, String description, TransactionStatus status, Account account) {
-        this.id = id;
-        this.amount = amount;
-        this.currency = currency;
-        this.creationDate = creationDate;
-        this.bookingDate = bookingDate;
-        this.partnerName = partnerName;
-        this.partnerAccountNumb = partnerAccountNumb;
-        this.description = description;
-        this.status = status;
-        this.account = account;
-    }
 }

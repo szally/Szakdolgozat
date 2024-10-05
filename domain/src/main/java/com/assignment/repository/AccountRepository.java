@@ -13,4 +13,6 @@ import java.util.List;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findAccountByCustomer(Customer customer);
     Account getAccountById(long accountIdToClose);
+
+    Account findAccountById(Long sourceAccountNumber);
 }

@@ -2,19 +2,17 @@ package com.assignment.app.view;
 
 import com.assignment.domain.*;
 import com.assignment.repository.AccountRepository;
-import com.assignment.repository.CardRepositroy;
+import com.assignment.repository.CardRepository;
 import com.assignment.service.*;
+import com.assignment.service.exceptions.InsufficientFundsException;
+import com.assignment.service.exceptions.InvalidIbanException;
 import com.assignment.service.exceptions.InvalidPasswordException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.assignment.service.exceptions.PartnerBankNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.time.format.DateTimeFormatter;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.assignment.domain.AccountAndCardStatus.ACTIVE;
 import static com.assignment.domain.AccountAndCardStatus.TERMINATED;
 import static com.assignment.domain.CustomerStatus.BLOCKED;
 
@@ -151,10 +149,10 @@ public class ConsoleView {
     }
 
 
-    public void changePin(Customer customer, CardServiceImpl cardService, CardRepositroy cardRepositroy) {
+    public void changePin(Customer customer, CardServiceImpl cardService, CardRepository cardRepository) {
         System.out.print("Enter card ID to change pin: ");
         long changePin = sc.nextLong();
-        Card cardToChangePin = cardRepositroy.getCardById(changePin);
+        Card cardToChangePin = cardRepository.getCardById(changePin);
         System.out.print("Set a PIN code ");
         int pin = sc.nextInt();
         cardService.updateCardDetails(customer, pin, cardToChangePin);
@@ -176,7 +174,7 @@ public class ConsoleView {
         }
     }
 
-    public void requestNewCard(Customer customer, CardServiceImpl cardService, CardRepositroy cardRepositroy) {
+    public void requestNewCard(Customer customer, CardServiceImpl cardService, CardRepository cardRepository) {
         System.out.print("Enter the card type (DEBIT/CREDIT): ");
         String type = sc.next().toUpperCase();
         System.out.print("Set a PIN code (4 digits): ");
@@ -194,29 +192,29 @@ public class ConsoleView {
         listCards(customer, cardService);
     }
 
-    public void blockCard(Customer customer, CardServiceImpl cardService, CardRepositroy cardRepositroy) {
+    public void blockCard(Customer customer, CardServiceImpl cardService, CardRepository cardRepository) {
         listCards(customer, cardService);
         System.out.print("Enter the card ID to block: ");
         long cardId = sc.nextLong();
-        Card card = cardRepositroy.getCardById(cardId);
+        Card card = cardRepository.getCardById(cardId);
         cardService.blockCard(card);
         listCards(customer, cardService);
     }
 
-    public void unblockCard(Customer customer, CardServiceImpl cardService, CardRepositroy cardRepositroy) {
+    public void unblockCard(Customer customer, CardServiceImpl cardService, CardRepository cardRepository) {
         listCards(customer, cardService);
         System.out.print("Enter the card ID to block: ");
         long cardId = sc.nextLong();
-        Card card = cardRepositroy.getCardById(cardId);
+        Card card = cardRepository.getCardById(cardId);
         cardService.unBlockCard(card);
         listCards(customer, cardService);
     }
 
-    public void terminateCard(Customer customer, CardServiceImpl cardService, CardRepositroy cardRepositroy) {
+    public void terminateCard(Customer customer, CardServiceImpl cardService, CardRepository cardRepository) {
         listCards(customer, cardService);
         System.out.print("Enter the card ID to terminate: ");
         long cardId = sc.nextLong();
-        Card card = cardRepositroy.getCardById(cardId);
+        Card card = cardRepository.getCardById(cardId);
         cardService.terminateCard(card);
         listCards(customer, cardService);
     }
@@ -309,7 +307,7 @@ public class ConsoleView {
         System.out.println("Transaction history downloaded as CSV to " + filePath);
     }
 
-    public void viewTransferBetweenOwnAccounts(Customer customer, TransferServiceImpl transferService, AccountServiceImpl accountService) {
+    public void viewTransferBetweenOwnAccounts(Customer customer, TransferServiceImpl transferService, AccountServiceImpl accountService) throws InsufficientFundsException {
         System.out.println("Transferring between own accounts:");
 
         // Get source account information
@@ -360,7 +358,7 @@ public class ConsoleView {
         System.out.print("    Enter partner account number: ");
         Long destinationAccountNumber = Long.parseLong(sc.nextLine());
 
-        System.out.print("   Enter partner account number: ");
+        System.out.print("   Enter partner account name: ");
         String partnerName = sc.nextLine();
 
         // Get transfer amount
@@ -382,6 +380,54 @@ public class ConsoleView {
         System.out.println("  Source account: " + sourceAccountNumber);
         System.out.println("  Destination account: " + destinationAccountNumber);
         System.out.println("  Partner name: " + partnerName);
+        System.out.println("  Amount transferred: " + amount);
+        System.out.println("  Description: " + description);
+    }
+
+    public void viewInternationalTransfer(Customer customer, TransferServiceImpl transferService, AccountServiceImpl accountService) throws PartnerBankNotFoundException, InsufficientFundsException, InvalidIbanException {
+        System.out.println("Transferring between own accounts:");
+
+        // Get source account information
+        System.out.println("  Source account:");
+        listAllAccounts(customer,accountService);
+        System.out.print("    Enter source account number: ");
+        Long sourceAccountNumber = Long.parseLong(sc.nextLine());
+
+        // Get destination account information
+        System.out.println("  Destination account:");
+        System.out.print("    Enter partner account number: ");
+        Long destinationAccountNumber = Long.parseLong(sc.nextLine());
+
+        System.out.print("   Enter partner account name: ");
+        String partnerName = sc.nextLine();
+
+        // Get transfer amount
+        System.out.print("  Enter transfer amount: ");
+        double amount = Double.parseDouble(sc.nextLine());
+
+        System.out.print("  Enter transfer curreny: ");
+        String currency = sc.nextLine();
+
+        // Get transaction details
+        System.out.print("  Enter transaction description: ");
+        String description = sc.nextLine();
+
+        System.out.print("  Enter IBAN: ");
+        String iban = sc.nextLine();
+
+        System.out.print("  Enter Swift code: ");
+        String swift = sc.nextLine();
+
+        // Perform the transfer
+        transferService.internationalTransfer(sourceAccountNumber, destinationAccountNumber, amount, currency, description, partnerName,customer, iban, swift);
+
+        // Display transfer confirmation
+        System.out.println("\nTransfer completed successfully!");
+        System.out.println("  Source account: " + sourceAccountNumber);
+        System.out.println("  IBAN: " + iban);
+        System.out.println("  Destination account: " + destinationAccountNumber);
+        System.out.println("  Partner name: " + partnerName);
+        System.out.println("  Swift: " + swift);
         System.out.println("  Amount transferred: " + amount);
         System.out.println("  Description: " + description);
     }

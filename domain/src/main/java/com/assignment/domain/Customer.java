@@ -30,10 +30,4 @@ public class Customer extends User{
     @OneToMany(mappedBy = "customer")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Transactions> transactionList = new ArrayList<>();
-
-    public Customer(Long id, Credentials credentials, String name, String birthPlace, Date birthDate, String mothersName, String idCardNumb, Long taxNumb, String email, CustomerStatus status, List<Account> accountList,List<Transactions> transactionsList) {
-        super(id, name, birthPlace, birthDate, mothersName, idCardNumb, taxNumb, email, credentials, status);
-        this.accounts = accountList;
-        this.transactionList = transactionsList;
-    }
 }

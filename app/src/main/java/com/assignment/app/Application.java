@@ -3,11 +3,13 @@ package com.assignment.app;
 import com.assignment.app.view.ConsoleView;
 import com.assignment.domain.Customer;
 import com.assignment.repository.AccountRepository;
-import com.assignment.repository.CardRepositroy;
+import com.assignment.repository.CardRepository;
 import com.assignment.repository.CustomerRepository;
 import com.assignment.service.*;
+import com.assignment.service.exceptions.InsufficientFundsException;
+import com.assignment.service.exceptions.InvalidIbanException;
+import com.assignment.service.exceptions.PartnerBankNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +41,7 @@ public class Application implements CommandLineRunner {
     @Autowired
     AccountRepository accountRepository;
     @Autowired
-    CardRepositroy cardRepositroy;
+    CardRepository cardRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -64,7 +66,15 @@ public class Application implements CommandLineRunner {
                     manageTransactions(loggedInCustomer);
                     break;
                 case 5:
-                    transfer(loggedInCustomer);
+                    try {
+                        transfer(loggedInCustomer);
+                    } catch (InsufficientFundsException e) {
+                        throw new RuntimeException(e);
+                    } catch (PartnerBankNotFoundException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidIbanException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
             }
         }
@@ -130,18 +140,18 @@ public class Application implements CommandLineRunner {
                     consoleView.listCards(loggedInCustomer, cardService);
                     break;
                 case 2:
-                    consoleView.requestNewCard(loggedInCustomer, cardService, cardRepositroy);
+                    consoleView.requestNewCard(loggedInCustomer, cardService, cardRepository);
                     break;
                 case 3:
-                    consoleView.blockCard(loggedInCustomer, cardService, cardRepositroy);
+                    consoleView.blockCard(loggedInCustomer, cardService, cardRepository);
                     break;
-                case 4:consoleView.unblockCard(loggedInCustomer,cardService,cardRepositroy);
+                case 4:consoleView.unblockCard(loggedInCustomer,cardService, cardRepository);
                     break;
                 case 5:
-                    consoleView.terminateCard(loggedInCustomer, cardService, cardRepositroy);
+                    consoleView.terminateCard(loggedInCustomer, cardService, cardRepository);
                     break;
                 case 6:
-                    consoleView.changePin(loggedInCustomer, cardService, cardRepositroy);
+                    consoleView.changePin(loggedInCustomer, cardService, cardRepository);
                     break;
                 case 7:
                     return;
@@ -203,12 +213,12 @@ public class Application implements CommandLineRunner {
         }
     }
 
-    public void transfer(Customer loggedInCustomer) {
+    public void transfer(Customer loggedInCustomer) throws InsufficientFundsException, PartnerBankNotFoundException, InvalidIbanException {
         while (true) {
             System.out.println("\nTransfer Management:");
             System.out.println("1. Transfer Between Own Account");
             System.out.println("2. Domestic Transfer");
-            System.out.println("3. Download TH in CSV");
+            System.out.println("3. International Transfer");
             System.out.println("4. Back");
 
             int choice = scanner.nextInt();
@@ -221,7 +231,7 @@ public class Application implements CommandLineRunner {
                     consoleView.viewDomesticTransfer(loggedInCustomer,transferService,accountService);
                     break;
                 case 3:
-
+                    consoleView.viewInternationalTransfer(loggedInCustomer,transferService,accountService);
                     break;
                 case 4:
                     return;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CardRepositroy extends JpaRepository<Card, Long> {
+public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> findAll();
 
     Card getCardById(long cardId);
