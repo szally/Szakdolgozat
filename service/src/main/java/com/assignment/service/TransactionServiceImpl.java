@@ -15,6 +15,18 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Override
+    public void setBookingDateForTransactions(Date now) {
+        List<Transactions> transactions = transactionRepository.findAll();
+        for (Transactions transaction : transactions) {
+            if(transaction.getBookingDate() == null){
+                transaction.setBookingDate(now);
+            }
+            transactionRepository.save(transaction);
+        }
+    }
+
     @Override
     public void updateBookedTransactions(Date now) {
         List<Transactions> transactions = transactionRepository.findAll();

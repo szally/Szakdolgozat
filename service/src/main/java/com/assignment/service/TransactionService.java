@@ -5,5 +5,6 @@ import java.util.Date;
 
 public interface TransactionService {
 
-    void updateBookedTransactions(Date bookingDate);
+    void setBookingDateForTransactions(Date now);
+    void updateBookedTransactions(Date now);
 }

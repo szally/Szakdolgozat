@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TransferServiceImpl implements TransferService {
@@ -27,7 +28,7 @@ public class TransferServiceImpl implements TransferService {
     PartnerBankRepository partnerBankRepository;
 
     @Autowired
-    IbanCodeRepository ibanCodeRepository;
+    IbanRepository ibanRepository;
 
     @Override
     public void transferBetweenOwnAccounts(Long sourceAccountNumber, Long destinationAccountNumber, double amount,  String currency, String description, Customer customer) throws InsufficientFundsException {
@@ -40,7 +41,6 @@ public class TransferServiceImpl implements TransferService {
         transaction.setAmount(amount);
         transaction.setCurrency(currency);
         transaction.setCreationDate(Date.from(Instant.now()));
-        transaction.setBookingDate(Date.from(Instant.now().plusSeconds(120)));
         transaction.setPartnerName(customer.getName());
         transaction.setPartnerAccountNumb(destinationAccountNumber);
         transaction.setDescription(description);
@@ -60,7 +60,8 @@ public class TransferServiceImpl implements TransferService {
             destinationAccount.setBalance(destinationAccount.getBalance() + amount);
         }
 
-        if (sourceAccount.getBalance() < 0) {
+        if (sourceAccount.getBalance() <= 0) {
+            transaction.setStatus(TransactionStatus.FAILED);
             throw new InsufficientFundsException("Insufficient funds in source account");
         }
 
@@ -72,23 +73,29 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public void domesticTransfer(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer) {
+    public void domesticTransfer(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer) throws InsufficientFundsException {
+        List<Account> accountList = accountRepository.findAll();
         Transactions transaction = new Transactions();
         if (sourceAccountNumber == null || destinationAccountNumber == null || amount <= 0) {
             throw new IllegalArgumentException("Invalid input parameters.");
         }
         Account sourceAccount = accountRepository.findAccountById(sourceAccountNumber);
+        Account destinationAccount = accountRepository.findAccountById(destinationAccountNumber);
 
         transaction.setAccount(sourceAccount);
         transaction.setAmount(amount);
         transaction.setCurrency(currency);
         transaction.setCreationDate(Date.from(Instant.now()));
-        transaction.setBookingDate(Date.from(Instant.now().plusSeconds(120)));
         transaction.setPartnerName(partner);
         transaction.setPartnerAccountNumb(destinationAccountNumber);
         transaction.setDescription(description);
         transaction.setStatus(TransactionStatus.PROCESSED);
         transaction.setCustomer(customer);
+
+        if (sourceAccount.getBalance() <= 0) {
+            transaction.setStatus(TransactionStatus.FAILED);
+            throw new InsufficientFundsException("Insufficient funds in source account");
+        }
 
         double amountToTransfer;
 
@@ -99,6 +106,13 @@ public class TransferServiceImpl implements TransferService {
         else {
             sourceAccount.setBalance(sourceAccount.getBalance() - amount);
         }
+        for(Account account : accountList){
+            if(destinationAccount.getId().equals(account.getId()) && destinationAccount.getCurrency().equals(currency)){
+                destinationAccount.setBalance(destinationAccount.getBalance() + amount);
+            }
+        }
+
+
         accountRepository.save(sourceAccount);
         customer.getTransactionList().add(transaction);
         transactionRepository.save(transaction);
@@ -106,6 +120,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public void internationalTransfer(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer, String targetIban, String swift) throws InsufficientFundsException, PartnerBankNotFoundException, InvalidIbanException {
+        Transactions transaction = new Transactions();
         if (sourceAccountNumber == null || destinationAccountNumber == null || amount <= 0) {
             throw new IllegalArgumentException("Invalid input parameters.");
         }
@@ -124,26 +139,29 @@ public class TransferServiceImpl implements TransferService {
             throw new InvalidIbanException("Invalid target account IBAN: " + targetIban);
         }
 
-        double transferAmount = amount;
-        if (!sourceAccount.getCurrency().equals(currency)) {
-            transferAmount = convertAmount(currency, sourceAccount.getCurrency(), amount);
-        }
-        double totalFee = calculateTransferFee(transferAmount, partnerBank.getTransferFeeInEUR(), currency); // Assuming fee is in EUR
 
-        if (sourceAccount.getBalance() < transferAmount + totalFee) {
+        if (!sourceAccount.getCurrency().equals(currency)) {
+            convertAmount(currency, sourceAccount.getCurrency(), amount);
+        }
+
+        double totalFee = calculateTransferFee(amount, partnerBank.getTransferFeeInEUR(), currency);
+
+        if(!sourceAccount.getCurrency().equals("EUR")) {
+            convertAmount("EUR", sourceAccount.getCurrency(), totalFee);
+        }
+
+        if (sourceAccount.getBalance() < totalFee) {
+            transaction.setStatus(TransactionStatus.FAILED);
             throw new InsufficientFundsException("Insufficient funds after considering transfer fee.");
         }
 
+        sourceAccount.setBalance(sourceAccount.getBalance() - totalFee);
 
 
-        sourceAccount.setBalance(sourceAccount.getBalance() - (transferAmount + totalFee));
-
-        Transactions transaction = new Transactions();
         transaction.setAccount(sourceAccount);
-        transaction.setAmount(transferAmount);
+        transaction.setAmount(amount);
         transaction.setCurrency(currency);
         transaction.setCreationDate(Date.from(Instant.now()));
-        transaction.setBookingDate(Date.from(Instant.now().plusSeconds(120)));
         transaction.setPartnerName(partner);
         transaction.setPartnerAccountNumb(destinationAccountNumber);
         transaction.setDescription(description);
@@ -200,24 +218,19 @@ public class TransferServiceImpl implements TransferService {
     }
 
     private double calculateTransferFee(double transferAmount, double partnerBankFeeInEUR, String currency) {
-        // Validate input parameters
         if (transferAmount < 0 || partnerBankFeeInEUR < 0) {
             throw new IllegalArgumentException("Invalid input parameters: transferAmount or partnerBankFeeInEUR cannot be negative.");
         }
 
         double amountInEUR = convertAmount(currency, "EUR", transferAmount);
 
-        double transferFee = amountInEUR * partnerBankFeeInEUR / 100;
-
-        if (!currency.equals("EUR")) {
-            transferFee = convertAmount(currency, "EUR", transferFee);
-        }
+        double transferFee = amountInEUR + partnerBankFeeInEUR;
 
         return transferFee;
     }
 
-    private boolean isValidIban(String iban) {
-        IbanCodes ibanCode = ibanCodeRepository.findByIban(iban);
-        return ibanCode != null;
+    private boolean isValidIban(String ibanN) {
+        Iban iban = ibanRepository.findByIban(ibanN);
+        return iban != null;
     }
 }

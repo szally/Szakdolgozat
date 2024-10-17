@@ -1,12 +1,12 @@
 package com.assignment.domain;
 
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-
-import static javax.persistence.FetchType.EAGER;
 
 @Data
 @NoArgsConstructor
@@ -28,8 +28,9 @@ public class Account {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private AccountAndCardStatus status;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private IbanCodes ibanCodes;
+    @ManyToOne
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Iban iban;
     @ManyToOne
     private Customer customer;
     @OneToOne

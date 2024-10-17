@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public interface TransferService {
     void transferBetweenOwnAccounts(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, Customer customer) throws InsufficientFundsException;
 
-    void domesticTransfer(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer);
+    void domesticTransfer(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer) throws InsufficientFundsException;
 
     void internationalTransfer(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer, String iban, String swift) throws InsufficientFundsException, PartnerBankNotFoundException, InvalidIbanException;
 

@@ -53,13 +53,12 @@ VALUES
     (3, 'Partner Bank C', 'SWIFT9012', 12.0);
 ALTER TABLE partner_banks ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM partner_banks) + 1;
 
-INSERT INTO iban_codes (id, country, iban)
+INSERT INTO iban (iban, country)
 VALUES
-    (1, 'Hungary', 'HU1234567890123456'),
-    (2, 'Germany', 'DE1234567890123456'),
-    (3, 'France', 'FR142004106912345678901234'),
-    (4, 'United States', 'US0601234567890'),
-    (5, 'United Kingdom', 'GB29HSBC7000000001234567');
+    ('HU123456789012345678901234', 'Hungary'),
+    ('HU123456789012345678901235', 'Hungary'),
+    ('HU123456789012345678901236', 'Hungary'),
+    ('HU123456789012345678901237', 'Hungary');
 ALTER TABLE iban_codes ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM iban_codes) + 1;
 
 INSERT INTO customer (id, username, password, name, birth_place, birth_date, mothers_name, id_card_numb, tax_numb, email, status)

@@ -344,7 +344,7 @@ public class ConsoleView {
         System.out.println("  Description: " + description);
     }
 
-    public void viewDomesticTransfer(Customer customer, TransferServiceImpl transferService, AccountServiceImpl accountService) {
+    public void viewDomesticTransfer(Customer customer, TransferServiceImpl transferService, AccountServiceImpl accountService) throws InsufficientFundsException {
         System.out.println("Transferring between own accounts:");
 
         // Get source account information

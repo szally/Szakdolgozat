@@ -12,17 +12,14 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "iban_codes")
-public class IbanCodes {
+@Table(name = "iban")
+public class Iban {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String iban;
 
     @Column
     private String country;
-
-    @Column
-    private String iban;
 
     @OneToMany(mappedBy = "ibanCodes")
     private List<Account> accounts;
