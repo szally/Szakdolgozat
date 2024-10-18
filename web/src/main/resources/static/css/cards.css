@@ -1,0 +1,6 @@
+.card-image {
+  width: 200px;
+  height: 100px;
+  background-color: #B33951; /* Szürke háttérszín */
+  border-radius: 10px; /* A sarkok lekerekítése 10px-el */
+}

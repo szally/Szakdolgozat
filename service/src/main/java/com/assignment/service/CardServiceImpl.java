@@ -64,4 +64,12 @@ public class CardServiceImpl implements CardService {
          cardRepository.save(card);
          return card;
     }
+
+    public List<Card> findAllCards() {
+        return cardRepository.findAll();
+    }
+
+    public Card findCardById(Long cardId) {
+        return cardRepository.findCardById(cardId);
+    }
 }

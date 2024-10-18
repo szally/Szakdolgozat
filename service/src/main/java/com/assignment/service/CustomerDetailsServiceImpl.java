@@ -6,6 +6,8 @@ import com.assignment.service.exceptions.InvalidPasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerDetailsServiceImpl implements CustomerDetailsService{
 
@@ -36,5 +38,13 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService{
     private boolean isValidPassword(String password) {
         return password.length() >= 8
                 && password.matches("(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+    }
+
+    public Customer findCustomerByUsername(String username) {
+        List<Customer> customers = customerRepository.findAll();
+
+        return customers.stream()
+                .filter(customer -> customer.getCredentials().getUsername().equals(username))
+                .findFirst().orElse(null);
     }
 }

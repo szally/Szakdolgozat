@@ -1,0 +1,33 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="/css/bootstrap.css " rel="stylesheet"/>
+    <link href="/css/custom.css" rel="stylesheet"/>
+    <link href="/css/cards.css" rel="stylesheet"/>
+    <title>Bank</title>
+</head>
+<header th:replace="/menu.html :: header"/>
+<body>
+<div class="container">
+    <div class="card border border-info border-3">
+        <div class="card-header bg-info">
+            <h3>User details</h3>
+        </div>
+        <div class="card-body bg-light">
+            <dl class="row">
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9" th:text="${customer.name}" />
+
+                <dt class="col-sm-3">Username</dt>
+                <dd class="col-sm-9" th:text = "${customer.credentials.username}"/>
+
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9" th:text = "${customer.email}"/>
+            </dl>
+        </div>
+
+    </div>
+
+    <div class="card-image"></div>
+</div>
+</body>
+</html>

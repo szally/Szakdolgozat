@@ -107,9 +107,15 @@ public class TransferServiceImpl implements TransferService {
             sourceAccount.setBalance(sourceAccount.getBalance() - amount);
         }
         for(Account account : accountList){
-            if(destinationAccount.getId().equals(account.getId()) && destinationAccount.getCurrency().equals(currency)){
-                destinationAccount.setBalance(destinationAccount.getBalance() + amount);
+            if(destinationAccount.getId().equals(account.getId())){
+                if( destinationAccount.getCurrency().equals(currency)){
+                    destinationAccount.setBalance(destinationAccount.getBalance() + amount);
+                }
+                else{
+                    destinationAccount.setBalance(destinationAccount.getBalance() + convertAmount(currency, destinationAccount.getCurrency(), amount));
+                }
             }
+
         }
 
 
@@ -121,24 +127,15 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public void internationalTransfer(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer, String targetIban, String swift) throws InsufficientFundsException, PartnerBankNotFoundException, InvalidIbanException {
         Transactions transaction = new Transactions();
-        if (sourceAccountNumber == null || destinationAccountNumber == null || amount <= 0) {
+        if (sourceAccountNumber == null || targetIban == null || amount <= 0) {
             throw new IllegalArgumentException("Invalid input parameters.");
         }
         Account sourceAccount = accountRepository.findAccountById(sourceAccountNumber);
-
-        if (sourceAccount.getBalance() < amount) {
-            throw new InsufficientFundsException("Insufficient funds in source account.");
-        }
 
         PartnerBank partnerBank = partnerBankRepository.findBySwiftCode(swift);
         if (partnerBank == null) {
             throw new PartnerBankNotFoundException("Partner bank not found with swift code: " + swift);
         }
-
-        if (!isValidIban(targetIban)) {
-            throw new InvalidIbanException("Invalid target account IBAN: " + targetIban);
-        }
-
 
         if (!sourceAccount.getCurrency().equals(currency)) {
             convertAmount(currency, sourceAccount.getCurrency(), amount);
@@ -227,10 +224,5 @@ public class TransferServiceImpl implements TransferService {
         double transferFee = amountInEUR + partnerBankFeeInEUR;
 
         return transferFee;
-    }
-
-    private boolean isValidIban(String ibanN) {
-        Iban iban = ibanRepository.findByIban(ibanN);
-        return iban != null;
     }
 }

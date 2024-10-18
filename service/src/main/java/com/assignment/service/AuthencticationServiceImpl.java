@@ -13,7 +13,7 @@ import java.util.List;
 import static com.assignment.domain.CustomerStatus.ACTIVE;
 import static com.assignment.domain.CustomerStatus.NEW;
 
-@Service()
+@Service
 public class AuthencticationServiceImpl implements AuthenticationService{
 
     @Autowired

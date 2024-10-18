@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class AccountServiceImpl implements AccountService{
         account.setCustomer(customer);
         account.setBalance(0);
         account.setCurrency(selectedCurrency);
-        account.setOpeningDate(Date.from(openingDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        account.setOpeningDate(Date.from(Instant.now()));
         account.setStatus(AccountAndCardStatus.ACTIVE);
 
         accountList.add(account);
@@ -62,5 +63,12 @@ public class AccountServiceImpl implements AccountService{
     public void closeAccount(Account account) {
         account.setStatus(AccountAndCardStatus.TERMINATED);
         accountRepository.save(account);
+    }
+
+    public List<Account> findAllAccounts(){
+        return accountRepository.findAll();
+    }
+    public Account findAccountById(Long accountId){
+        return accountRepository.findAccountById(accountId);
     }
 }

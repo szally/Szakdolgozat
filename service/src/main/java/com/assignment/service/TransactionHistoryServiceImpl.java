@@ -1,7 +1,9 @@
 package com.assignment.service;
 
 import com.assignment.domain.*;
+import com.assignment.repository.TransactionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
@@ -13,6 +15,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class TransactionHistoryServiceImpl implements TransactionHistoryService{
+
+    @Autowired
+    TransactionRepository transactionRepository;
     @Override
     public List<Transactions> getTransactionHistory(Customer customer){
 
@@ -60,4 +65,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     }
 
 
+    public List<Transactions> findAllTransactions() {
+        return transactionRepository.findAll();
+    }
 }

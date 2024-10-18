@@ -53,13 +53,12 @@ VALUES
     (3, 'Partner Bank C', 'SWIFT9012', 12.0);
 ALTER TABLE partner_banks ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM partner_banks) + 1;
 
-INSERT INTO iban (iban, country)
+INSERT INTO IBAN (iban, country)
 VALUES
     ('HU123456789012345678901234', 'Hungary'),
     ('HU123456789012345678901235', 'Hungary'),
     ('HU123456789012345678901236', 'Hungary'),
     ('HU123456789012345678901237', 'Hungary');
-ALTER TABLE iban_codes ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM iban_codes) + 1;
 
 INSERT INTO customer (id, username, password, name, birth_place, birth_date, mothers_name, id_card_numb, tax_numb, email, status)
 VALUES
@@ -75,12 +74,12 @@ VALUES
  (10003, 'Kovács Anna', '2023-11-10', 9012, 'BLOCKED', 'DEBIT', 2);
 ALTER TABLE card ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM card) + 1;
 
-INSERT INTO account (id, balance, currency, opening_date, status, card_id, iban_codes_id, customer_id)
+INSERT INTO account (id, balance, currency, opening_date, status, card_id, iban_iban, customer_id)
 VALUES
-  (1001, 5000.00, 'EUR', '2023-01-01', 'ACTIVE', 10002, 1,1),
-  (1002, 1000.00, 'USD', '2024-03-15', 'ACTIVE', 10001, 3,1),
-  (1003, 2000.00, 'HUF', '2022-10-05', 'TERMINATED', NULL, 1,2),
-  (1004, 0.00, 'EUR', '2024-07-20', 'TERMINATED', 10003, 2,2);
+  (1001, 5000.00, 'EUR', '2023-01-01', 'ACTIVE', 10002, 'HU123456789012345678901234',1),
+  (1002, 1000.00, 'USD', '2024-03-15', 'ACTIVE', 10001, 'HU123456789012345678901235',1),
+  (1003, 2000.00, 'HUF', '2022-10-05', 'TERMINATED', NULL, 'HU123456789012345678901236',2),
+  (1004, 0.00, 'EUR', '2024-07-20', 'TERMINATED', 10003, 'HU123456789012345678901237',2);
 ALTER TABLE account ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM account) + 1;
 
 

@@ -1,4 +1,4 @@
-package com.assignment.app;
+package com.assignment;
 
 import com.assignment.service.TransactionHistoryServiceImpl;
 import com.assignment.service.TransactionService;
