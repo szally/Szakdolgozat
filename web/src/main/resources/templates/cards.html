@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Management</title>
+    <link href="/css/bootstrap.css " rel="stylesheet"/>
+    <link href="/css/custom.css" rel="stylesheet"/>
+</head>
+<header th:replace="/menu.html :: header"/>
+<body>
+<div class="container">
+    <div class="card border border-info border-3">
+        <div class="card-header bg-info">
+            <h3>Your Cards</h3>
+        </div>
+        <div class="card-body bg-light">
+            <table class="table table-bordered bg-white">
+                <thead>
+                <tr>
+                    <th scope="col">Card Number</th>
+                    <th scope="col">Owner's Name</th>
+                    <th scope="col">Expiry Date</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="card : ${customersCards}">
+                    <td th:text="${card.id}"/>
+                    <td th:text="${card.customerName}"/>
+                    <td th:text="${card.expiryDate}"/>
+                    <td th:text="${card.type}"/>
+                    <td th:text="${card.status}"/>
+                    <td>
+                        <form th:action="@{/block-card(cardId=${card.id})}" method="post">
+                            <button type="submit" value="Block">Block</button>
+                        </form>
+                        <form th:action="@{/unblock-card(cardId=${card.id})}" method="post">
+                            <button type="submit" value="UnBlock">Unlock</button>
+                        </form>
+                        <form th:action="@{/terminate-card(cardId=${card.id})}" method="post">
+                            <button type="submit" value="Close">Close</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/update-card-details(cardId=${card.id})}" method="post">
+                            <label for="pin" class="text-dark mb-1">Enter New Pin Code:</label>
+                            <input type="password" id="pin"  class="form-control mb-3" th:field="${cardModel.pinCode}">
+                            <button type="submit" class="btn btn-danger btn-sm float-end">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="card border border-dark bg-light">
+        <div class="card-header bg-dark text-white">
+            <h3>Request New Card</h3>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/request-new-card}" th:object="${cardModel}" method="post">
+                <div th:if="${#fields.hasErrors('type')}" class="alert alert-danger" role="alert">
+                    Please select the card type.
+                </div>
+                <div th:if="${#fields.hasErrors('pinCode')}" class="alert alert-danger" role="alert">
+                    Please enter the PIN code.
+                </div>
+
+                <label for="type" class="text-dark mb-1">Card Type:</label>
+                <select id="type" name="type" class="form-select mb-3">
+                    <option value="DEBIT">Debit</option>
+                    <option value="CREDIT">Credit</option>
+                </select>
+
+                <label for="pinCode" class="text-dark mb-1">PIN Code:</label>
+                <input type="password" id="pinCode" name="pinCode" class="form-control mb-3" th:field="${cardModel.pinCode}">
+
+                <button type="submit" class="btn btn-danger btn-sm float-end">Request</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

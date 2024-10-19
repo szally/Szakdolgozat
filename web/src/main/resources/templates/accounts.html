@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Management</title>
     <link href="/css/bootstrap.css " rel="stylesheet"/>
     <link href="/css/custom.css" rel="stylesheet"/>
@@ -25,8 +24,8 @@
                     <th scope="col">Account number IBAN</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="account : ${customersAccount}">
+                <tbody th:each="account : ${customersAccount}">
+                <tr>
                     <td th:text="${account.id}"/>
                     <td th:text="${account.balance}"/>
                     <td th:text="${account.currency}"/>
@@ -34,39 +33,46 @@
                     <td th:text="${account.status}"/>
                     <td th:text="${account?.iban?.iban?: 'N/A'}"/>
                     <td>
-                        <form th:action="@{/block-account/{accountId} (accountId=${account.id})}" method="post">
-                            <button type="submit" value="Block">Block</button>
-                        </form>
-                        <form th:action="@{/close-account/{accountId} (accountId=${account.id})}" method="post">
-                            <button type="submit" value="Close">Close</button>
-                        </form>
+                        <div class="button">
+                            <form th:action="@{/unblock-account(accountId=${account.id})}" method="post">
+                                <button type="submit">Unlock</button>
+                            </form>
+                            <form th:action="@{/block-account(accountId=${account.id})}" method="post">
+                                <button type="submit">Block</button>
+                            </form>
+                            <form th:action="@{/close-account(accountId=${account.id})}" method="post">
+                                <button type="submit">Close</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
-        </div>
 
-    </div>
-</div>
-
-<div class="container">
-    <div class="card border border-info border-3">
-        <div class="card-header bg-info">
-            <h2>Open New Account</h2>
-            <div class="card-body bg-light">
-            <form th:action="@{/open-new-account}" th:object="${accountModel}" method="post">
-                <label for="currency">Currency:</label>
-                <select id="currency" name="currency">
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                </select>
-                <br>
-                <td class="text-center">
-                    <button type="submit" class="btn btn-outline-primary btn-sm">Open Account</button>
-                </td>
-            </form>
+            <div class="card-header bg-info">
+                <h2>Open New Account</h2>
+                <div class="card-body bg-light">
+                    <form th:action="@{/open-new-account}" th:object="${accountModel}" method="post">
+                        <label for="currency">Currency:</label>
+                        <select id="currency" name="currency">
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="USD">GBP</option>
+                            <option value="EUR">CHF</option>
+                            <option value="USD">AUD</option>
+                            <option value="EUR">JPY</option>
+                            <option value="USD">HUF</option>
+                        </select>
+                        <br>
+                        <td class="text-center">
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Open Account</button>
+                        </td>
+                    </form>
+                </div>
             </div>
+
         </div>
+
     </div>
 </div>
 

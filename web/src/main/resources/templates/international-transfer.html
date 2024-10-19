@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Domestic Transfer</title>
+    <link href="/css/bootstrap.css" rel="stylesheet" />
+    <link href="/css/custom.css" rel="stylesheet" />
+</head>
+<header th:replace="/menu.html :: header"></header>
+<body>
+<div class="container">
+    <div class="card border border-info border-3">
+        <div class="card-header bg-info">
+            <h3>Transfer Between Own Accounts</h3>
+        </div>
+        <div class="card-body bg-light">
+            <form th:action="@{/domestic-transfer}" th:object="${transactionModel}" method="post">
+                <div class="form-group">
+                    <label for="sourceAccountNumber">Source Account Number:</label>
+                    <select th:field="${transactionModel.account}" class="form-control" id="sourceAccountNumber" required>
+                        <option th:each="account : ${customersAccount}" th:value="${account.id}">
+                            [[${account.id}]] ([[${account.currency}]])
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="destinationAccountNumber">Destination Account Number:</label>
+                    <input type="number" th:field="${transactionModel.partnerAccountNumb}" class="form-control" id="destinationAccountNumber" required>
+
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount:</label>
+                    <input type="number" th:field="${transactionModel.amount}" class="form-control" id="amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="currency">Currency:</label>
+                    <input type="text" th:field="${transactionModel.currency}" class="form-control" id="currency" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea th:field="${transactionModel.description}" class="form-control" id="description"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Transfer</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

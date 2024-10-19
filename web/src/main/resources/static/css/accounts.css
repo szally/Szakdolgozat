@@ -1,0 +1,39 @@
+
+.grid-container {
+  display: grid;
+  grid-template-columns: minmax(20px, auto) 1fr;
+  grid-template-rows: minmax(20px, auto)  1fr;
+  gap: 10px;
+  padding: 0px 10px 60px 10px;
+}
+
+.grid-item {
+    width: 350px;
+    height: 200;
+    align-items: center;
+    margin: 10px 5px 10px 5px;
+    padding: 15px;
+    grid-gap: 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+   -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.inner-grid {
+  width: 100%;
+  display: flex;
+}
+
+.icon {
+  font-size: 4rem;
+      margin: auto;
+}
+
+.text {
+      text-align: start;
+  -webkit-text-stroke: medium;
+     -webkit-text-stroke: medium;
+         margin-top: 10px;
+      margin-bottom: 15px;
+}

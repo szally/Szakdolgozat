@@ -54,7 +54,7 @@ public class AccountController {
     }
 
     @PostMapping({"/open-new-account"})
-    public String addNewGame(String currency, RedirectAttributes redirectAttributes) {
+    public String addNewAccount(String currency, RedirectAttributes redirectAttributes) {
             //Account account = this.accountTransformer.transformAccountModelToAccount(accountModel);
             this.accountService.openNewAccount(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), currency);
             redirectAttributes.addFlashAttribute("successMessage", "Game added successfully!");

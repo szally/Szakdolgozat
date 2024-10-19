@@ -41,7 +41,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card requestNewCard(Customer customer, String customerName, String type, int pin) {
+    public Card requestNewCard(Customer customer, String type, int pin) {
         List<Card> cardList = cardRepository.findAll();
         LocalDate expiryDate = LocalDate.now().plusYears(4);
         Card card = new Card();
@@ -51,7 +51,6 @@ public class CardServiceImpl implements CardService {
         card.setExpiryDate(Date.from(expiryDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         card.setStatus(AccountAndCardStatus.ACTIVE);
         card.setCustomer(customer);
-        //itt valahogy meg kellene oldani hogy elindul a kártya kibocsáltási folyamat vagy mit tudjam én
         cardList.add(card);
 
         cardRepository.save(card);

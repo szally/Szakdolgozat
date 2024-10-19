@@ -14,7 +14,7 @@ public interface CardService {
     void blockCard(Card card);
      void unBlockCard(Card card);
     void terminateCard(Card card);
-    Card requestNewCard(Customer customer, String customerName, String type, int pin);
+    Card requestNewCard(Customer customer, String type, int pin);
     Card updateCardDetails(Customer customer, int pinCode, Card card);
     //void reportLostOrStolenCard();
 }

@@ -186,7 +186,7 @@ public class ConsoleView {
             return;
         }
 
-        Card newCard = cardService.requestNewCard(customer, customer.getName(), type, pin);
+        Card newCard = cardService.requestNewCard(customer, type, pin);
        // cardService.saveCard(newCard); // Persist the new card
         System.out.println("New card request successful: " + newCard);
         listCards(customer, cardService);

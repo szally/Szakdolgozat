@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transaction History</title>
+    <link href="/css/bootstrap.css " rel="stylesheet"/>
+    <link href="/css/custom.css" rel="stylesheet"/>
+</head>
+<header th:replace="/menu.html :: header"/>
+<body>
+<div class="container">
+    <div class="card border border-info border-3">
+        <div class="card-header bg-info">
+            <h3>Your Transactions</h3>
+        </div>
+        <div class="card-body bg-light">
+            <table class="table table-bordered bg-white">
+                <thead>
+                <tr>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Creation Date</th>
+                    <th scope="col">Booking Date</th>
+                    <th scope="col">Partner Name</th>
+                    <th scope="col">Partner Account Number</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Account ID</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction : ${customersTransactions}">
+                    <td th:text="${transaction.amount} + ' ' + ${transaction.currency}"/>
+                    <td th:text="${transaction.creationDate}"/>
+                    <td th:text="${transaction.bookingDate}"/>
+                    <td th:text="${transaction.partnerName}"/>
+                    <td th:text="${transaction.partnerAccountNumb}"/>
+                    <td th:text="${transaction.description}"/>
+                    <td th:text="${transaction.status}"/>
+                    <td th:text="${transaction.account.id}"/>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

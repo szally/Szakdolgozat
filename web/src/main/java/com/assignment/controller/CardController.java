@@ -12,6 +12,7 @@ import com.assignment.transformer.CardTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,12 +32,12 @@ public class CardController {
 
     @Autowired
     CardTransformer cardTransformer;
-    @ModelAttribute("accountModel")
+    @ModelAttribute("cardModel")
     public CardModel getCardModel(){
         return new CardModel();
     }
 
-    @ModelAttribute("accountListModel")
+    @ModelAttribute("cardListModel")
     public CardListModel getCardListModel() {
         return new CardListModel(this.cardTransformer
                 .transformCardListToCardModelList(this.cardService.getCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()))));
@@ -44,26 +45,29 @@ public class CardController {
 
     @GetMapping({"/cards"})
     public String showCards(Model model) {
-        model.addAttribute("customersAccount", getCardListModel());
-        model.addAttribute("account", this.cardService.findAllCards());
-        return "player-games-page";
+        model.addAttribute("customersCards", cardService.getCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
+        return "cards";
     }
 
     @PostMapping({"/request-new-card"})
-    public String requestNewCard(String currency, RedirectAttributes redirectAttributes, @RequestParam("customerName") String customerName, @RequestParam("cardType") String cardType, @RequestParam("pinCode") int pinCode) {
-        //Account account = this.accountTransformer.transformAccountModelToAccount(accountModel);
-        this.cardService.requestNewCard(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), customerName, cardType, pinCode);
+    public String requestNewCard(RedirectAttributes redirectAttributes, String type,int pinCode) {
+        this.cardService.requestNewCard(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), type, pinCode);
         redirectAttributes.addFlashAttribute("successMessage", "New card requested successfully!");
 
-        return "redirect:manage-games";
+        return "redirect:cards";
     }
 
     @PostMapping({"/update-card-details"})
-    public String updateCardDetails(@RequestParam("cardId") Long cardId, @RequestParam("pin") int pin, RedirectAttributes redirectAttributes){
-        Card card = cardService.findCardById(cardId);
-        cardService.updateCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), pin, card);
-        redirectAttributes.addFlashAttribute("successMessage", "Account blocked successfully!");
-        return "redirect:manage-games";
+    public String updateCardDetails(@RequestParam("cardId") Long cardId, int pin, RedirectAttributes redirectAttributes, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return "error";
+        } else {
+            Card card = cardService.findCardById(cardId);
+            cardService.updateCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), pin, card);
+            redirectAttributes.addFlashAttribute("successMessage", "Account blocked successfully!");
+        }
+        return "redirect:cards";
+
     }
 
     @PostMapping({"/block-card"})
@@ -71,7 +75,7 @@ public class CardController {
         Card card = cardService.findCardById(cardId);
         cardService.blockCard(card);
         redirectAttributes.addFlashAttribute("successMessage", "Account unblocked successfully!");
-        return "redirect:manage-games";
+        return "redirect:cards";
     }
 
     @PostMapping({"/unblock-card"})
@@ -79,7 +83,7 @@ public class CardController {
         Card card = cardService.findCardById(cardId);
         cardService.unBlockCard(card);
         redirectAttributes.addFlashAttribute("successMessage", "Account unblocked successfully!");
-        return "redirect:manage-games";
+        return "redirect:cards";
     }
 
     @PostMapping({"/terminate-card"})
@@ -87,6 +91,6 @@ public class CardController {
         Card card = cardService.findCardById(cardId);
         cardService.terminateCard(card);
         redirectAttributes.addFlashAttribute("successMessage", "Account closed successfully!");
-        return "redirect:manage-games";
+        return "redirect:cards";
     }
 }

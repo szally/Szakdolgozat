@@ -36,6 +36,10 @@ public class TransferServiceImpl implements TransferService {
         Account destinationAccount = accountRepository.findAccountById(destinationAccountNumber);
         Transactions transaction = new Transactions();
 
+        if (sourceAccount == null) {
+            throw new RuntimeException("Source account not found!");
+        }
+
         transaction.setAccount(sourceAccount);
 
         transaction.setAmount(amount);

@@ -43,8 +43,7 @@ public class TransactionHistoryController {
 
     @GetMapping({"/transactions"})
     public String showTransactionHistory(Model model) {
-        model.addAttribute("customersAccount", getAccountListModel());
-        model.addAttribute("account", this.transactionService.findAllTransactions());
-        return "player-games-page";
+        model.addAttribute("customersTransactions", this.transactionService.getTransactionHistory(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
+        return "transaction-history";
     }
 }
