@@ -17,23 +17,11 @@ public class TransactionServiceImpl implements TransactionService{
     private TransactionRepository transactionRepository;
 
     @Override
-    public void setBookingDateForTransactions(Date now) {
-        List<Transactions> transactions = transactionRepository.findAll();
-        for (Transactions transaction : transactions) {
-            if(transaction.getBookingDate() == null){
-                transaction.setBookingDate(now);
-            }
-            transactionRepository.save(transaction);
-        }
-    }
-
-    @Override
     public void updateBookedTransactions(Date now) {
         List<Transactions> transactions = transactionRepository.findAll();
         for (Transactions transaction : transactions) {
-            if(transaction.getBookingDate() != null && transaction.getBookingDate().before(now)){
-                transaction.setStatus(TransactionStatus.BOOKED);
-            }
+            transaction.setBookingDate(now);
+            transaction.setStatus(TransactionStatus.BOOKED);
             transactionRepository.save(transaction);
         }
     }

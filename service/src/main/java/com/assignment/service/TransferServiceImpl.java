@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransferServiceImpl implements TransferService {
@@ -84,7 +85,7 @@ public class TransferServiceImpl implements TransferService {
             throw new IllegalArgumentException("Invalid input parameters.");
         }
         Account sourceAccount = accountRepository.findAccountById(sourceAccountNumber);
-        Account destinationAccount = accountRepository.findAccountById(destinationAccountNumber);
+
 
         transaction.setAccount(sourceAccount);
         transaction.setAmount(amount);
@@ -110,15 +111,20 @@ public class TransferServiceImpl implements TransferService {
         else {
             sourceAccount.setBalance(sourceAccount.getBalance() - amount);
         }
+
+        Optional<Account> optionalDestinationAccount = Optional.ofNullable(accountRepository.findAccountById(destinationAccountNumber));
         for(Account account : accountList){
-            if(destinationAccount.getId().equals(account.getId())){
-                if( destinationAccount.getCurrency().equals(currency)){
-                    destinationAccount.setBalance(destinationAccount.getBalance() + amount);
+            optionalDestinationAccount.ifPresent(destinationAccount ->{
+                if(destinationAccount.getId().equals(account.getId())){
+                    if( destinationAccount.getCurrency().equals(currency)){
+                        destinationAccount.setBalance(destinationAccount.getBalance() + amount);
+                    }
+                    else{
+                        destinationAccount.setBalance(destinationAccount.getBalance() + convertAmount(currency, destinationAccount.getCurrency(), amount));
+                    }
                 }
-                else{
-                    destinationAccount.setBalance(destinationAccount.getBalance() + convertAmount(currency, destinationAccount.getCurrency(), amount));
-                }
-            }
+            });
+
 
         }
 
@@ -136,7 +142,7 @@ public class TransferServiceImpl implements TransferService {
         }
         Account sourceAccount = accountRepository.findAccountById(sourceAccountNumber);
 
-        PartnerBank partnerBank = partnerBankRepository.findBySwiftCode(swift);
+        PartnerBank partnerBank = findPartnerBankBySwift(swift);
         if (partnerBank == null) {
             throw new PartnerBankNotFoundException("Partner bank not found with swift code: " + swift);
         }
@@ -228,5 +234,9 @@ public class TransferServiceImpl implements TransferService {
         double transferFee = amountInEUR + partnerBankFeeInEUR;
 
         return transferFee;
+    }
+
+    public PartnerBank findPartnerBankBySwift(String swift){
+        return partnerBankRepository.findBySwiftCode(swift);
     }
 }

@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script type="text/javascript" src="/css/scripts.js"></script>
     <title>Transfer Between Own Accounts</title>
     <link href="/css/bootstrap.css" rel="stylesheet" />
     <link href="/css/custom.css" rel="stylesheet" />
+    <link rel="/css/stylesheet" href="transaction_popup.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 </head>
 <header th:replace="/menu.html :: header"></header>
 <body>
@@ -14,20 +18,21 @@
         </div>
         <div class="card-body bg-light">
             <form th:action="@{/transfer-between-own-accounts}" th:object="${transactionModel}" method="post">
-                <div class="form-group"">
+                <div class="form-group">
                     <label for="sourceAccountNumber">Source Account Number:</label>
-                    <select th:field="${transactionModel.account}" class="form-control" id="sourceAccountNumber" required  th:each="account : ${customersAccount}">
-                        <option th:value="${account.id}">
-                            [[${account.id}]] ([[${account.currency}]])
+                    <select th:field="${transactionModel.account.id}" class="form-control" id="sourceAccountNumber" required>
+                        <option th:each="account : ${customersAccount}"
+                                th:value="${account.id}" th:text = "${account.id}">
                         </option>
                     </select>
+                    <input type="hidden" th:field="${transactionModel.account.id}" />
                 </div>
                 <div class="form-group">
                     <label for="destinationAccountNumber">Destination Account Number:</label>
-                    <select th:field="${transactionModel.partnerAccountNumb}" class="form-control" id="destinationAccountNumber" required  th:each="account : ${customersAccount}">
-                        <option th:value="${account.id}">
-                            [[${account.id}]] ([[${account.currency}]])
+                    <select th:field="${transactionModel.partnerAccountNumb}" class="form-control" id="destinationAccountNumber" required>
+                        <option  th:each="account : ${customersAccount}" th:value="${account.id}"  th:text = "${account.id}">
                         </option>
+                        <input type="hidden" th:field="${transactionModel.partnerAccountNumb}" />
                     </select>
                 </div>
                 <div class="form-group">
@@ -50,10 +55,11 @@
                     <label for="description">Description:</label>
                     <textarea th:field="${transactionModel.description}" class="form-control" id="description"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Transfer</button>
+                <button type="submit" class="btn button-custom">Transfer</button>
             </form>
         </div>
     </div>
 </div>
+
 </body>
 </html>

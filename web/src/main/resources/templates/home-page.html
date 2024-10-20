@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script type="text/javascript" src="/css/scripts.js"></script>
     <link href="/css/bootstrap.css " rel="stylesheet"/>
     <link href="/css/custom.css" rel="stylesheet"/>
     <link href="/css/cards.css" rel="stylesheet"/>
@@ -10,82 +11,105 @@
 <header th:replace="/menu.html :: header"/>
 <body>
 <div class="container">
-    <div class="card border border-info border-3">
-        <div class="card-header bg-info">
-            <h3>User details</h3>
-            <i class="bi bi-bank"></i>
-            <i class="bi bi-coin"></i>
-            <i class="bi bi-piggy-bank-fill"></i>
-            <i class="bi bi-safe2-fill"></i>
-            <i class="bi bi-calendar"></i>
-            <i class="bi bi-circle"></i>
-            <i class="bi bi-clock-history"></i>
-            <i class="bi bi-currency-dollar"></i>
-            <i class="bi bi-currency-pound"></i>
-            <i class="bi bi-currency-euro"></i>
-            <i class="bi bi-currency-exchange"></i>
-            <i class="bi bi-envelope"></i>
-        </div>
-        <div class="card-body bg-light">
-            <dl class="row">
-                <dt class="col-sm-3">Name</dt>
-                <dd class="col-sm-9" th:text="${customer.name}" />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border border-info border-3 mt-3">
+                <div class="card-header bg-info">
+                    <h3>User details</h3>
+                </div>
+                <div class="card-body bg-light">
+                    <dl class="row">
+                        <dt class="col-sm-3">Name</dt>
+                        <dd class="col-sm-9" th:text="${customer.name}"/>
 
-                <dt class="col-sm-3">Username</dt>
-                <dd class="col-sm-9" th:text = "${customer.credentials.username}"/>
+                        <dt class="col-sm-3">Username</dt>
+                        <dd class="col-sm-9" th:text="${customer.credentials.username}"/>
 
-                <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9" th:text = "${customer.email}"/>
-            </dl>
-        </div>
-
-    </div>
-
-    <div class="card border border-info border-3 mt-3">
-        <div class="card-header bg-info">
-            <i class="bi bi-cash-coin"></i><h3>Your Accounts</h3>
-        </div>
-        <div class="grid-container">
-            <div class="grid-item" th:each="account : ${customersAccount}">
-                <div class="inner-grid">
-                    <div class="text">
-                        <p>Account Number:</p>
-                        <p th:text="${account.id}"></p>
-                        <p>Balance:</p>
-                        <p th:text="${account.balance} + ' ' + ${account.currency}"></p>
-                    </div>
-                    <div class="icon">
-                        <i class="bi bi-wallet2"></i>
-                    </div>
+                        <dt class="col-sm-3">Email</dt>
+                        <dd class="col-sm-9" th:text="${customer.email}"/>
+                    </dl>
                 </div>
             </div>
         </div>
-        <div class="details-bar">
-            <span><a th:href="@{/accounts}" th:text="More" /></span>
-        </div>
-    </div>
-
-    <div class="card border border-info border-3 mt-3">
-        <div class="card-header bg-info">
-            <i class="bi bi-credit-card-2-back-fill"></i><h3>Your Cards</h3>
-        </div>
-        <div class="card-body bg-light">
-            <div class="card-container">
-                <div th:each="card : ${customersCards}" class="card-image">
-                    <div class="card-content">
-                        <div class="text">
-                        <p th:text="${card.id}"></p>
-                        <p th:text="${card.expiryDate}"></p>
-                        <p th:text="${card.customerName}"></p>
+        <div class="col-md-6">
+            <div class="card border border-info border-3 mt-3 ">
+                <div class="card-header bg-info">
+                    <h3> <i class="bi bi-cash-coin"></i> Your Accounts</h3>
+                </div>
+                <div class="grid-container">
+                    <div class="grid-item" th:each="account : ${customersAccount}">
+                        <div class="inner-grid">
+                            <div class="text">
+                                <p th:text="${account.id}"></p>
+                                <p th:text="${account.balance} + ' ' + ${account.currency}"></p>
+                            </div>
+                            <div class="icon">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="details-bar">
+                    <span><a th:href="@{/accounts}" th:text="More"/></span>
+                </div>
             </div>
         </div>
-        <div class="details-bar">
-            <span><a th:href="@{/cards}" th:text="More" /></span>
-        </div>
     </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border border-info border-3 mt-3 ">
+                <div class="card-header bg-info">
+                    <h3><i class="bi bi-credit-card-2-back-fill"></i> Your Cards</h3>
+                </div>
+                <div class="card-body bg-light">
+                    <div class="card-container">
+                        <div th:each="card : ${customersCards}" class="card-image">
+                            <div class="card-content">
+                                <div class="text">
+                                    <p th:text="${card.id}"></p>
+                                    <p th:text="${card.expiryDate}"></p>
+                                    <p th:text="${card.customerName}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="details-bar">
+                    <span><a th:href="@{/cards}" th:text="More"/></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border border-info border-3 mt-3">
+                <div class="card-header bg-info">
+                    <h3>Your Transactions</h3>
+                </div>
+                <div th:each="transaction : ${customersTransactions}">
+                    <div class="card-body bg-light">
+                        <dl class="row">
+                            <dt class="col-sm-3">Amount</dt>
+                            <dd class="col-sm-9" th:text="${transaction.amount} + ' ' + ${transaction.currency}"/>
+
+                            <dt class="col-sm-3">Partner Name</dt>
+                            <dd class="col-sm-9" th:text="${transaction.partnerName}"/>
+
+                            <dt class="col-sm-3">Partner Account Number</dt>
+                            <dd class="col-sm-9" th:text="${transaction.partnerAccountNumb}"/>
+                        </dl>
+                    </div>
+                </div>
+                <div class="details-bar">
+                    <span><a th:href="@{/transactions}" th:text="More"/></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
 </body>
+
 </html>

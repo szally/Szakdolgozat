@@ -19,16 +19,6 @@ public class TransactionUpdater {
 
     private static final Logger logger = LoggerFactory.getLogger(TransactionUpdater.class);
 
-    @Scheduled(cron = "0 */2 * * * ?")
-    public void updateTransactionBookingDate() {
-        logger.info("Starting update of booking date");
-        try {
-            transactionService.setBookingDateForTransactions(Date.from(Instant.now()));
-            logger.info("Booking date updated successfully");
-        } catch (Exception e) {
-            logger.error("Error updating booking date", e);
-        }
-    }
     @Scheduled(cron = "0 */5 * * * ?")
     public void updateTransactionStatuses() {
         logger.info("Starting update of transaction statuses");

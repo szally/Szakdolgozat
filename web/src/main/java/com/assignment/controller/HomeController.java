@@ -9,6 +9,7 @@ import com.assignment.security.CustomerLoginDetailsService;
 import com.assignment.service.AccountServiceImpl;
 import com.assignment.service.CardServiceImpl;
 import com.assignment.service.CustomerDetailsServiceImpl;
+import com.assignment.service.TransactionHistoryServiceImpl;
 import com.assignment.transformer.AccountTransformer;
 import com.assignment.transformer.CardTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ public class HomeController {
 
     @Autowired
     CardTransformer cardTransformer;
+    @Autowired
+    TransactionHistoryServiceImpl transactionService;
 
     public HomeController() {
     }
@@ -71,6 +74,7 @@ public class HomeController {
         model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
         model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         model.addAttribute("customersCards", this.cardService.getCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
+        model.addAttribute("customersTransactions", this.transactionService.getTransactionHistory(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         return "home-page";
     }/*
     @GetMapping( {"/accounts"})

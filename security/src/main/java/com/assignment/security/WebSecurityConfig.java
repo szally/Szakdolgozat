@@ -16,12 +16,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     }
 
     protected void configure(HttpSecurity http) throws Exception{
-        ((HttpSecurity)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)http.authorizeRequests()
+        ((HttpSecurity)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)http.authorizeRequests()
                 .antMatchers(new String[]{"/home"})).permitAll()
                 .antMatchers(new String[]{"/accounts"})).permitAll()
                 .antMatchers(new String[]{"/cards"})).permitAll()
                 .antMatchers(new String[]{"/transactions"})).permitAll()
                 .antMatchers(new String[]{"/transfer-between-own-accounts"})).permitAll()
+                .antMatchers(new String[]{"/domestic-transfer"})).permitAll()
+                .antMatchers(new String[]{"/international-transfer"})).permitAll()
+                .antMatchers(new String[]{"/settings"})).permitAll()
                 .antMatchers(new String[]{"/static/**"})).permitAll()
                 .antMatchers(new String[]{"/login"})).permitAll().anyRequest()).authenticated().and()).formLogin()
                 .defaultSuccessUrl("/home").permitAll();

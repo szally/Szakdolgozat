@@ -2,24 +2,9 @@
 	padding: 0.25rem
 }
 
-/*.navbar {
-    margin-bottom: 1rem
-}*/
-
 .navbar {
-  background-color: #2196f3; /* Light blue */
-  color: #fff; /* White text */
-  margin-bottom: 1.5rem;
-  padding: 0.5rem 1rem;
+    margin-bottom: 1rem
 }
-
-.nav-link {
-  color: #fff; /* White text */
-  &:hover {
-    color: #e0e0e0; /* Light grey hover */
-  }
-}
-
 
 .card {
   border-radius: 5px;
@@ -37,44 +22,6 @@
   padding: 1.5rem;
 }
 
-.dl {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.dl dt {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.table {
-  background-color: #fff; /* White background */
-  border-color: #ddd; /* Light grey border */
-}
-
-.table thead th {
-  background-color: #f8f9fa; /* Light grey header */
-  color: #333; /* Dark text */
-  border-color: #ddd; /* Light grey border */
-}
-
-.table tbody tr td,
-.table tbody tr th {
-  padding: 0.75rem 1rem;
-  border-color: #ddd; /* Light grey border */
-}
-
-.btn-outline-primary {
-  border-color: #2196f3; /* Light blue border */
-  color: #2196f3; /* Light blue text */
-  background-color: transparent; /* Transparent background */
-  &:hover {
-    background-color: #e0e0e0; /* Light grey hover background */
-    color: #fff; /* White text on hover */
-  }
-}
-
 .details-bar {
   display: flex;
   justify-content: flex-end;
@@ -82,8 +29,7 @@
   padding: 10px 15px;
   border-top: 2px solid #333;
   font-size: 1.2em;
-  background-color: #f0f0f0;
-  border-radius: 5px;
+  background-color: #ff9fad;
 }
 
 .details-bar span {
@@ -93,10 +39,10 @@
 .details-bar::after {
   content: "...";
   margin-left: 10px;
-  color: #888; /* Szürke színű három pontok */
+  color: #2E2E20;
 }
 
-button {
+.button-custom {
    background-color: #FF0000; /* Piros háttér */
     color: #fff; /* Fehér szöveg */
     border: none;
@@ -128,14 +74,26 @@ button:active {
   }
 }
 
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    background-color: #fff;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+.settings-icon{
+color: white;
 }
 
-.dropdown-menu.show {
-    display: block;
+.settings-icon:hover{
+color: #C51D34;
+}
+
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+body {
+
+}
+
+.nagyBetu {
+    font-size: 60px; /* Nagyobb betűméret */
 }
