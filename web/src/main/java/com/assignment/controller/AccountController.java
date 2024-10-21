@@ -49,7 +49,8 @@ public class AccountController {
     @GetMapping({"/accounts"})
     public String showAccounts(Model model) {
         model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
-        //model.addAttribute("account", this.accountService.findAllAccounts());
+        model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
+
         return "accounts";
     }
 

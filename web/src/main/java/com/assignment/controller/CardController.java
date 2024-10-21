@@ -46,6 +46,8 @@ public class CardController {
     @GetMapping({"/cards"})
     public String showCards(Model model) {
         model.addAttribute("customersCards", cardService.getCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
+        model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
+
         return "cards";
     }
 

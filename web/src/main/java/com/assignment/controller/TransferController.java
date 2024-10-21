@@ -57,6 +57,8 @@ public class TransferController {
 
     @GetMapping({"/transfer-between-own-accounts"})
     public String showTransferBetweenOwnAccount(Model model) {
+        model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
+
         model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         return "transfer-between-own-accounts";
     }
@@ -77,6 +79,8 @@ public class TransferController {
 
     @GetMapping({"/domestic-transfer"})
     public String showDomesticTransfer(Model model) {
+        model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
+
         model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         return "domestic-transfer";
     }
@@ -98,6 +102,8 @@ public class TransferController {
 
     @GetMapping({"/international-transfer"})
     public String showInternationalTransfer(Model model, @ModelAttribute("partnerBankModel") PartnerBankModel partnerBankModel) {
+        model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
+
         model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         return "international-transfer";
     }
