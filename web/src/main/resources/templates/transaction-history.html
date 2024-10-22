@@ -11,8 +11,8 @@
 <div class="main--content">
     <div class="header--wrapper">
         <div class="header--title">
-            <span th:text="'Welcome back ' + ${customer.name}"></span>
-            <h2>Dashboard</h2>
+            <span th:text="'You are logged in as: ' + ${customer.name}"></span>
+            <h2>Transaction History</h2>
         </div>
         <div class="user--info">
             <div class="search--box">
@@ -28,14 +28,14 @@
             <table>
                 <thead>
                 <tr>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Creation Date</th>
-                    <th scope="col">Booking Date</th>
-                    <th scope="col">Partner Name</th>
-                    <th scope="col">Partner Account Number</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Account ID</th>
+                    <th>Amount</th>
+                    <th>Creation Date</th>
+                    <th>Booking Date</th>
+                    <th>Partner Name</th>
+                    <th>Partner Account Number</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Account ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -52,49 +52,14 @@
                 </tbody>
                 <tfoot>
                 <tr>
+                    <td colspan="8">
+                        <!--<button th:action="@{/transactions-download-json}" method="get">Download Transactions as JSON</button>-->
+                    </td>
                 </tr>
                 </tfoot>
             </table>
         </div>
     </div>
 </div>
-<!--
-<div class="container">
-    <div class="card border border-info border-3">
-        <div class="card-header bg-info">
-            <h3>Your Transactions</h3>
-        </div>
-        <div class="card-body bg-light">
-            <table class="table table-bordered bg-white">
-                <thead>
-                <tr>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Creation Date</th>
-                    <th scope="col">Booking Date</th>
-                    <th scope="col">Partner Name</th>
-                    <th scope="col">Partner Account Number</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Account ID</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="transaction : ${customersTransactions}">
-                    <td th:text="${transaction.amount} + ' ' + ${transaction.currency}"/>
-                    <td th:text="${transaction.creationDate}"/>
-                    <td th:text="${transaction.bookingDate}"/>
-                    <td th:text="${transaction.partnerName}"/>
-                    <td th:text="${transaction.partnerAccountNumb}"/>
-                    <td th:text="${transaction.description}"/>
-                    <td th:text="${transaction.status}"/>
-                    <td th:text="${transaction.account.id}"/>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
--->
-
 </body>
 </html>

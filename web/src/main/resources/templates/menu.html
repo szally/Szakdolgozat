@@ -8,7 +8,7 @@
 <div class="sidebar">
     <div class="logo"></div>
     <ul class="menu">
-        <li class="active">
+        <li>
             <a href="/home">
             <i class="bi bi-house"></i>
             <span>Home</span></a>
@@ -29,21 +29,24 @@
             <i class="bi bi-clock-history"></i>
             <span>Transaction History</span></a>
         </li>
+        <div class="dropdown"><li>
+            <a href="#" class="dropbtn">
+                <i class="bi bi-cash-stack"></i>
+                <span class="transfer-menu">Transfers</span></a>
+                </li>
+          <!--  <button class="dropbtn"><i class="bi bi-cash-stack"></i></button>-->
+            <div class="dropdown-content">
         <li>
-            <a href="/transfer-between-own-accounts">
-            <i class="bi bi-cash-stack"></i>
-            <span>Transfer Between Own Accounts</span></a>
+            <a href="/transfer-between-own-accounts">Transfer Between Own Accounts</a>
         </li>
         <li>
-            <a href="/domestic-transfer">
-            <i class="bi bi-cash-stack"></i>
-            <span>Domestic Transfer</span></a>
+            <a href="/domestic-transfer">Domestic Transfer</a>
         </li>
         <li>
-            <a href="/international-transfer">
-            <i class="bi bi-cash-stack"></i>
-            <span>International Transfer</span></a>
+            <a href="/international-transfer">International Transfer</a>
         </li>
+            </div>
+        </div>
         <li>
             <a href="/settings">
             <i class="bi bi-gear settings-icon"></i>
@@ -56,44 +59,6 @@
         </li>
     </ul>
 </div>
-<!--<header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="site-content">
-        <div class="navbar-brand">Bank</div>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/home"><i class="bi bi-house"></i> Home</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/accounts"><i class="bi bi-wallet"></i> Account Management</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/cards">
-                        <i class="bi bi-credit-card"></i> Card Management</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/transactions"><i class="bi bi-clock-history"></i> Transaction History</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/transfer-between-own-accounts"><i class="bi bi-cash-stack"></i> Transfer Between Own Accounts</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/domestic-transfer"><i class="bi bi-cash-stack"></i> Domestic Transfer</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/international-transfer"><i class="bi bi-cash-stack"></i> International Transfer</a>
-                </li>
-            </ul>
-
-            <form class="form-inline my-2 my-lg-0 nav-item active" >
-                    <a class="nav-link" href="/settings"><i class="bi bi-gear settings-icon"></i></a>
-            </form>
-            <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
-            </form>
-        </div>
- </nav>
-</header>-->
 </body>
 
 </html>

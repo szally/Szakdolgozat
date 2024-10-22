@@ -12,8 +12,8 @@
 <div class="main--content">
     <div class="header--wrapper">
         <div class="header--title">
-            <span th:text="'Welcome back ' + ${customer.name}"></span>
-            <h2>Dashboard</h2>
+            <span th:text="'You are logged in as: ' + ${customer.name}"></span>
+            <h2>Transfer Between Own Accounts</h2>
         </div>
         <div class="user--info">
             <div class="search--box">
@@ -27,6 +27,50 @@
         <h3 class="main--title">Transfer Between Own Accounts</h3>
         <div class="table--container">
             <form th:action="@{/transfer-between-own-accounts}" th:object="${transactionModel}" method="post">
+                <div class="form-group">
+                    <label for="sourceAccountNumber" class="form-label">Source Account Number:</label>
+                    <select th:field="${transactionModel.account.id}" id="sourceAccountNumber" required  class="form-select" >
+                        <option th:each="account : ${customersAccount}"
+                                th:value="${account.id}" th:text = "${account.id} +' ' +'('+${account.currency}+')'">
+                        </option>
+                    </select>
+                    <input type="hidden" th:field="${transactionModel.account.id}" />
+                </div>
+                <div class="form-group">
+                    <label for="destinationAccountNumber" class="form-label">Destination Account Number:</label>
+                    <select th:field="${transactionModel.partnerAccountNumb}"  class="form-select" id="destinationAccountNumber" required>
+                        <option  th:each="account : ${customersAccount}" th:value="${account.id}"  th:text = "${account.id}">
+                        </option>
+                        <input type="hidden" th:field="${transactionModel.partnerAccountNumb}" />
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="partnerName" class="form-label">Partner's name:</label>
+                    <input type="text" th:field="${transactionModel.partnerName}" id="partnerName" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="amount" class="form-label">Amount:</label>
+                    <input type="number" th:field="${transactionModel.amount}" class="form-control" id="amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="currency" class="form-label">Currency:</label>
+                    <select id="currency" name="currency" class="form-select">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="USD">GBP</option>
+                        <option value="EUR">CHF</option>
+                        <option value="USD">AUD</option>
+                        <option value="EUR">JPY</option>
+                        <option value="USD">HUF</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="form-label">Description:</label>
+                    <textarea th:field="${transactionModel.description}" id="description" class="form-control"></textarea>
+                </div>
+                <button type="submit">Transfer</button>
+            </form>
+            <!--<form th:action="@{/transfer-between-own-accounts}" th:object="${transactionModel}" method="post">
                 <div>
                     <label for="sourceAccountNumber">Source Account Number:</label>
                     <select th:field="${transactionModel.account.id}" id="sourceAccountNumber" required>
@@ -69,62 +113,9 @@
                     <textarea th:field="${transactionModel.description}" id="description"></textarea>
                 </div>
                 <button type="submit">Transfer</button>
-            </form>
+            </form>-->
         </div>
     </div>
 </div>
-<!--
-<div th:insert="/menu.html :: div"></div>
-<div class="container">
-    <div class="card border border-info border-3">
-        <div class="card-header bg-info">
-            <h3>Transfer Between Own Accounts</h3>
-        </div>
-        <div class="card-body bg-light">
-            <form th:action="@{/transfer-between-own-accounts}" th:object="${transactionModel}" method="post">
-                <div class="form-group">
-                    <label for="sourceAccountNumber">Source Account Number:</label>
-                    <select th:field="${transactionModel.account.id}" class="form-control" id="sourceAccountNumber" required>
-                        <option th:each="account : ${customersAccount}"
-                                th:value="${account.id}" th:text = "${account.id}">
-                        </option>
-                    </select>
-                    <input type="hidden" th:field="${transactionModel.account.id}" />
-                </div>
-                <div class="form-group">
-                    <label for="destinationAccountNumber">Destination Account Number:</label>
-                    <select th:field="${transactionModel.partnerAccountNumb}" class="form-control" id="destinationAccountNumber" required>
-                        <option  th:each="account : ${customersAccount}" th:value="${account.id}"  th:text = "${account.id}">
-                        </option>
-                        <input type="hidden" th:field="${transactionModel.partnerAccountNumb}" />
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="amount">Amount:</label>
-                    <input type="number" th:field="${transactionModel.amount}" class="form-control" id="amount" required>
-                </div>
-                <div class="form-group">
-                    <label for="currency">Currency:</label>
-                    <select id="currency" name="currency">
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                        <option value="USD">GBP</option>
-                        <option value="EUR">CHF</option>
-                        <option value="USD">AUD</option>
-                        <option value="EUR">JPY</option>
-                        <option value="USD">HUF</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea th:field="${transactionModel.description}" class="form-control" id="description"></textarea>
-                </div>
-                <button type="submit" class="btn button-custom">Transfer</button>
-            </form>
-        </div>
-    </div>
-</div>
--->
-
 </body>
 </html>

@@ -36,8 +36,7 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService{
     }
 
     private boolean isValidPassword(String password) {
-        return password.length() >= 8
-                && password.matches("(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+        return password.matches("(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
     }
 
     public Customer findCustomerByUsername(String username) {

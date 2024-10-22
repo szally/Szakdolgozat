@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script type="text/javascript" src="/css/scripts.js"></script>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Home</title>
     <link href="/css/styles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body>
+<body onchange="getSavedItem()">
 <div th:insert="/menu.html :: div"></div>
 <div class="main--content">
     <div class="header--wrapper">
@@ -24,7 +25,7 @@
     </div>
 
     <div class="card--container">
-        <h3 class="main--title">Today's data</h3>
+        <h3 class="main--title">Cards</h3>
         <div class="card--wrapper">
             <div class="payment--card" th:each="card : ${customersCards}"> <!--itt a classt át kell írni-->
                 <div class="card--header">

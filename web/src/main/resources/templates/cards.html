@@ -7,13 +7,13 @@
     <link href="/css/styles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body>
+<body  onload="getFontsize()">
 <div th:insert="/menu.html :: div"></div>
 <div class="main--content">
     <div class="header--wrapper">
         <div class="header--title">
-            <span th:text="'Welcome back ' + ${customer.name}"></span>
-            <h2>Dashboard</h2>
+            <span th:text="'You are logged in as: ' + ${customer.name}"></span>
+            <h2>Card Management</h2>
         </div>
         <div class="user--info">
             <div class="search--box">
@@ -29,11 +29,13 @@
             <table>
                 <thead>
                 <tr>
-                    <th scope="col">Card Number</th>
-                    <th scope="col">Owner's Name</th>
-                    <th scope="col">Expiry Date</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Status</th>
+                    <th>Card Number</th>
+                    <th>Owner's Name</th>
+                    <th>Expiry Date</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th> </th>
+                    <th> </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,6 +46,9 @@
                     <td th:text="${card.type}"/>
                     <td th:text="${card.status}"/>
                     <td>
+                        <button class="collapsible" onclick="collapsible()">Card Operations</button>
+
+                        <div class="content">
                         <form th:action="@{/block-card(cardId=${card.id})}" method="post">
                             <button type="submit" value="Block">Block</button>
                         </form>
@@ -53,93 +58,67 @@
                         <form th:action="@{/terminate-card(cardId=${card.id})}" method="post">
                             <button type="submit" value="Close">Close</button>
                         </form>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
+                    <td colspan="7"></td>
                 </tr>
                 </tfoot>
             </table>
-        </div>
-    </div>
-</div>
-<!--<div class="container">
-    <div class="card border border-info border-3">
-        <div class="card-header bg-info">
-            <h3>Your Cards</h3>
-        </div>
-        <div class="card-body bg-light">
-            <table class="table table-bordered bg-white">
-                <thead>
-                <tr>
-                    <th scope="col">Card Number</th>
-                    <th scope="col">Owner's Name</th>
-                    <th scope="col">Expiry Date</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="card : ${customersCards}">
-                    <td th:text="${card.id}"/>
-                    <td th:text="${card.customerName}"/>
-                    <td th:text="${card.expiryDate}"/>
-                    <td th:text="${card.type}"/>
-                    <td th:text="${card.status}"/>
-                    <td>
-                        <form th:action="@{/block-card(cardId=${card.id})}" method="post">
-                            <button type="submit" value="Block">Block</button>
-                        </form>
-                        <form th:action="@{/unblock-card(cardId=${card.id})}" method="post">
-                            <button type="submit" value="UnBlock">Unlock</button>
-                        </form>
-                        <form th:action="@{/terminate-card(cardId=${card.id})}" method="post">
-                            <button type="submit" value="Close">Close</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form th:action="@{/update-card-details(cardId=${card.id})}" method="post">
-                            <label for="pin" class="text-dark mb-1">Enter New Pin Code:</label>
-                            <input type="password" id="pin"  class="form-control mb-3" th:field="${cardModel.pinCode}">
-                            <button type="submit" class="btn btn-danger btn-sm float-end">Update</button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+
         </div>
 
-    </div>
-</div>
-
-<div class="container">
-    <div class="card border border-dark bg-light">
-        <div class="card-header bg-dark text-white">
-            <h3>Request New Card</h3>
-        </div>
-        <div class="card-body">
+        <div class="tabular--wrapper">
+            <h3 class="main--title">Request New Card</h3>
             <form th:action="@{/request-new-card}" th:object="${cardModel}" method="post">
-                <div th:if="${#fields.hasErrors('type')}" class="alert alert-danger" role="alert">
+                <div th:if="${#fields.hasErrors('type')}" role="alert">
                     Please select the card type.
                 </div>
-                <div th:if="${#fields.hasErrors('pinCode')}" class="alert alert-danger" role="alert">
+                <div th:if="${#fields.hasErrors('pinCode')}" role="alert">
                     Please enter the PIN code.
                 </div>
 
-                <label for="type" class="text-dark mb-1">Card Type:</label>
-                <select id="type" name="type" class="form-select mb-3">
+                <div class="form-group">
+                    <label for="type" class="form-label">Card Type:</label>
+                    <select id="type" name="type" class="form-select">
+                        <option value="DEBIT">Debit</option>
+                        <option value="CREDIT">Credit</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pinCode" class="form-label">PIN Code:</label>
+                    <input type="password" id="pinCode" name="pinCode" th:field="${cardModel.pinCode}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <button type="submit">Request</button>
+                </div>
+            </form>
+            <!--<form th:action="@{/request-new-card}" th:object="${cardModel}" method="post">
+                <div th:if="${#fields.hasErrors('type')}" role="alert">
+                    Please select the card type.
+                </div>
+                <div th:if="${#fields.hasErrors('pinCode')}"role="alert">
+                    Please enter the PIN code.
+                </div>
+
+                <label for="type">Card Type:</label>
+                <select id="type" name="type">
                     <option value="DEBIT">Debit</option>
                     <option value="CREDIT">Credit</option>
                 </select>
-
-                <label for="pinCode" class="text-dark mb-1">PIN Code:</label>
-                <input type="password" id="pinCode" name="pinCode" class="form-control mb-3" th:field="${cardModel.pinCode}">
-
-                <button type="submit" class="btn btn-danger btn-sm float-end">Request</button>
-            </form>
+                <br>
+                <label for="pinCode">PIN Code:</label>
+                <input type="password" id="pinCode" name="pinCode" th:field="${cardModel.pinCode}">
+                <br>
+                <button type="submit">Request</button>
+            </form>-->
         </div>
     </div>
-</div>-->
+</div>
+
+
 </body>
 </html>

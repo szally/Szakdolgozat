@@ -1,14 +1,73 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Példa oldal</title>
+    <title>Settings</title>
     <script type="text/javascript" src="/css/scripts.js"></script>
     <link href="/css/styles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 <div th:insert="/menu.html :: div"></div>
-<button onclick="changeFont(document.body)">Change Font</button>
+<div class="main--content">
+    <div class="header--wrapper">
+        <div class="header--title">
+            <span th:text="'You are logged in as: ' + ${customer.name}"></span>
+            <h2>Settings</h2>
+        </div>
+        <div class="user--info">
+            <div class="search--box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search">
+            </div>
+            <img src="pictures/Desktop.png" alt="#"/>
+        </div>
+    </div>
+<!---->
 
+<!--<form th:action="@{/update-card-details(cardId=${card.id})}" method="post">
+    <label for="pin">Enter New Pin Code:</label>
+    <input type="password" id="pin"  th:field="${cardModel.pinCode}">
+    <button type="submit">Update</button>
+</form>-->
+    <div class="tabular--wrapper">
+        <h3 class="main--title">Update Cusotmer Details</h3>
+        <div class="table--container">
+        <form th:action="@{/update-customer-details}" th:object="${customer}" method="post">
+            <div class="form-group">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" id="name" name="name" th:field="${customer.name}" class="form-control">
+            </div>
+            <div class="form-group">
+            <label for="idCardNumb" class="form-label">ID card number:</label>
+            <input type="text" id="idCardNumb" name="idCardNumb" th:field="${customer.idCardNumb}" class="form-control">
+            </div>
+                <div class="form-group">
+            <label for="email" class="form-label">E-mail:</label>
+            <input type="email" id="email" name="email"  th:field="${customer.email}" class="form-control">
+                </div>
+            <button type="submit">Save</button>
+        </form>
+        </div>
+    </div>
+<div class="tabular--wrapper">
+    <h3 class="main--title">Update Password</h3>
+    <div class="table--container">
+        <form th:action="@{/update-password}" th:object="${customer}" method="post">
+            <div class="form-group">
+                <label for="newPassword" class="form-label">New password:</label>
+                <input type="password" id="newPassword" name="newPassword" class="form-control">
+            </div>
+            <button type="submit">Save</button>
+        </form>
+        </div>
+</div>
+
+<div class="tabular--wrapper">
+    <h3 class="main--title">Change Font Size</h3>
+    <div class="table--container">
+        <button onclick="changeFont(document.body, '30px')" id="changeFontSizeButton">Change Font</button>
+    </div>
+</div>
+</div>
 </body>
 </html>

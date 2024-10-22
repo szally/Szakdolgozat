@@ -11,8 +11,8 @@
 <div class="main--content">
     <div class="header--wrapper">
         <div class="header--title">
-            <span th:text="'Welcome back ' + ${customer.name}"></span>
-            <h2>Dashboard</h2>
+            <span th:text="'You are logged in as: ' + ${customer.name}"></span>
+            <h2>International Transfer</h2>
         </div>
         <div class="user--info">
             <div class="search--box">
@@ -26,45 +26,41 @@
         <h3 class="main--title">International Transfer</h3>
         <div class="table--container">
             <form th:action="@{/international-transfer}" th:object="${transactionModel}" method="post">
-                <div>
-                    <label for="sourceAccountNumber">Source Account Number:</label>
-                    <select th:field="${transactionModel.account.id}" id="sourceAccountNumber" required>
+                <div class="form-group">
+                    <label for="sourceAccountNumber" class="form-label">Source Account Number:</label>
+                    <select th:field="${transactionModel.account.id}" id="sourceAccountNumber"  class="form-select"  required>
                         <option th:each="account : ${customersAccount}"
                                 th:value="${account.id}" th:text = "${account.id} +' ' +'('+${account.currency}+')'">
                         </option>
                     </select>
                 </div>
-                <div>
-                    <label for="destinationAccountNumber">Destination Account Number:</label>
-                    <input type="number" th:field="${transactionModel.partnerAccountNumb}" id="destinationAccountNumber" required>
+                <div class="form-group">
+                    <label for="destinationAccountNumber" class="form-label">Destination Account Number:</label>
+                    <input type="number" th:field="${transactionModel.partnerAccountNumb}" id="destinationAccountNumber" class="form-control" required>
                 </div>
-                <div>
-                    <label for="partnerName">Partner's name:</label>
-                    <input type="text" th:field="${transactionModel.partnerName}" id="partnerName" required>
+                <div class="form-group">
+                    <label for="partnerName" class="form-label">Partner's name:</label>
+                    <input type="text" th:field="${transactionModel.partnerName}" id="partnerName" class="form-control" required>
                 </div>
-                <div>
-                    <label for="iban">Partner's IBAN:</label>
-                    <input type="text" th:field="${transactionModel.account.iban.iban}" id="iban" required>
+                <div class="form-group">
+                    <label for="iban" class="form-label">Partner's IBAN:</label>
+                    <input type="text" th:field="${transactionModel.account.iban.iban}" id="iban" class="form-control" required>
                 </div>
-                <div>
-                    <label for="partnerBank">SWIFT:</label>
-                    <input type="text" th:field="${partnerBankModel.swiftCode}" id="partnerBank" required>
+                <div class="form-group">
+                    <label for="partnerBank" class="form-label">SWIFT:</label>
+                    <input type="text" th:field="${partnerBankModel.swiftCode}" id="partnerBank" class="form-control" required>
                     <div th:if="${partnerBanks != null}">
                         <p>Partner Bank Name: <span th:utext="${partnerBanks.name}"></span></p>
                         <p>Partner Bank Country: <span th:utext="${partnerBanks.country}"></span></p>
                     </div>
                 </div>
-                <div th:if="${partnerBank != null}">
-                    <p>Partner Bank Name: <span th:text="${partnerBank.name}"></span></p>
-                    <p>Partner Bank Country: <span th:text="${partnerBank.country}"></span></p>
+                <div class="form-group">
+                    <label for="amount" class="form-label">Amount:</label>
+                    <input type="number" th:field="${transactionModel.amount}"  class="form-control" id="amount" required>
                 </div>
-                <div>
-                    <label for="amount">Amount:</label>
-                    <input type="number" th:field="${transactionModel.amount}" id="amount" required>
-                </div>
-                <div>
-                    <label for="currency">Currency:</label>
-                    <select id="currency" name="currency">
+                <div class="form-group">
+                    <label for="currency" class="form-label">Currency:</label>
+                    <select id="currency" name="currency"  class="form-select" >
                         <option value="USD">USD</option>
                         <option value="EUR">EUR</option>
                         <option value="USD">GBP</option>
@@ -74,9 +70,9 @@
                         <option value="USD">HUF</option>
                     </select>
                 </div>
-                <div>
-                    <label for="description">Description:</label>
-                    <textarea th:field="${transactionModel.description}" id="description"></textarea>
+                <div class="form-group">
+                    <label for="description" class="form-label">Description:</label>
+                    <textarea th:field="${transactionModel.description}" id="description" class="form-control"></textarea>
                 </div>
                 <button type="submit">Transfer</button>
             </form>
