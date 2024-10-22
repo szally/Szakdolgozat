@@ -46,4 +46,6 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService{
                 .filter(customer -> customer.getCredentials().getUsername().equals(username))
                 .findFirst().orElse(null);
     }
+
+
 }

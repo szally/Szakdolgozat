@@ -1,7 +1,5 @@
 package com.assignment;
 
-import com.assignment.service.TransactionHistoryServiceImpl;
-import com.assignment.service.TransactionService;
 import com.assignment.service.TransactionServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +11,11 @@ import java.time.Instant;
 import java.util.Date;
 
 @Component
-public class TransactionUpdater {
+public class Updater {
     @Autowired
     private TransactionServiceImpl transactionService;
 
-    private static final Logger logger = LoggerFactory.getLogger(TransactionUpdater.class);
+    private static final Logger logger = LoggerFactory.getLogger(Updater.class);
 
     @Scheduled(cron = "0 */5 * * * ?")
     public void updateTransactionStatuses() {

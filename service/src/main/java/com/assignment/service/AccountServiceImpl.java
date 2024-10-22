@@ -2,6 +2,7 @@ package com.assignment.service;
 
 import com.assignment.domain.Account;
 import com.assignment.domain.AccountAndCardStatus;
+import com.assignment.domain.AccountType;
 import com.assignment.domain.Customer;
 import com.assignment.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,12 +28,13 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public Account openNewAccount(Customer customer, String selectedCurrency) {
+    public Account openNewAccount(Customer customer, String selectedCurrency, AccountType selectedAccountType) {
         List<Account> accountList = accountRepository.findAll();
         LocalDate openingDate = LocalDate.now();
         Account account = new Account();
         account.setCustomer(customer);
         account.setBalance(0);
+        account.setType(selectedAccountType);
         account.setCurrency(selectedCurrency);
         account.setOpeningDate(Date.from(Instant.now()));
         account.setStatus(AccountAndCardStatus.ACTIVE);
@@ -70,5 +70,10 @@ public class AccountServiceImpl implements AccountService{
     }
     public Account findAccountById(Long accountId){
         return accountRepository.findAccountById(accountId);
+    }
+
+    public List<Account> getSavingAccount(Customer customer){
+       List<Account> savingAccounts = new ArrayList<Account>();
+        return savingAccounts = getAccountDetails(customer).stream().filter(account -> account.getType().equals(AccountType.SAVING)).collect(Collectors.toList());
     }
 }

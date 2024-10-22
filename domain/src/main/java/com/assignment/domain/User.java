@@ -33,6 +33,8 @@ public class User {
     private Long taxNumb;
     @Column
     private String email;
+    @Column(name = "points")
+    private int points;
     @Embedded
     private Credentials credentials;
     @Column(name = "status")

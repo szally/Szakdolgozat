@@ -1,6 +1,7 @@
 package com.assignment.controller;
 
 import com.assignment.domain.Account;
+import com.assignment.domain.AccountType;
 import com.assignment.domain.Customer;
 import com.assignment.model.AccountListModel;
 import com.assignment.model.AccountModel;
@@ -55,9 +56,9 @@ public class AccountController {
     }
 
     @PostMapping({"/open-new-account"})
-    public String addNewAccount(String currency, RedirectAttributes redirectAttributes) {
+    public String addNewAccount(String currency, AccountType accountType, RedirectAttributes redirectAttributes) {
             //Account account = this.accountTransformer.transformAccountModelToAccount(accountModel);
-            this.accountService.openNewAccount(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), currency);
+            this.accountService.openNewAccount(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), currency,accountType);
             redirectAttributes.addFlashAttribute("successMessage", "Game added successfully!");
 
         return "redirect:accounts";

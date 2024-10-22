@@ -23,8 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class SettingsController {
 
-    @Autowired
-    private CustomerRepository customerRepository;
 
     @Autowired
     private CustomerLoginDetailsService customerLoginDetailsService;
@@ -36,19 +34,8 @@ public class SettingsController {
     AccountServiceImpl accountService;
 
     @Autowired
-    AccountTransformer accountTransformer;
-
-    @Autowired
     CardServiceImpl cardService;
 
-
-    @Autowired
-    CardTransformer cardTransformer;
-
-    @ModelAttribute("cardModel")
-    public CardModel getCardModel(){
-        return new CardModel();
-    }
     @GetMapping("/settings")
     public String home(Model model) {
         model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
@@ -68,6 +55,17 @@ public class SettingsController {
     @PostMapping({"/update-password"})
     public String updatePassword(String newPassword, RedirectAttributes redirectAttributes) throws InvalidPasswordException {
         customerDetailsService.changePassword(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), newPassword);
+        redirectAttributes.addFlashAttribute("successMessage", "Account blocked successfully!");
+        return "redirect:settings";
+
+    }
+
+    @PostMapping({"/update-card-details"})
+    public String updateCardDetails(@RequestParam("cardId") Long cardId, @ModelAttribute("cardModel") CardModel cardModel, int pin, RedirectAttributes redirectAttributes, Model model){
+        model.addAttribute("customersCards", this.cardService.getCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
+        model.addAttribute("cardModel", cardModel);
+        Card card = cardService.findCardById(cardId);
+        cardService.updateCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), pin, card);
         redirectAttributes.addFlashAttribute("successMessage", "Account blocked successfully!");
         return "redirect:settings";
 

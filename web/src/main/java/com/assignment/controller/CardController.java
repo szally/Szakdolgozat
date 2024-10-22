@@ -59,19 +59,6 @@ public class CardController {
         return "redirect:cards";
     }
 
-    @PostMapping({"/update-card-details"})
-    public String updateCardDetails(@RequestParam("cardId") Long cardId, int pin, RedirectAttributes redirectAttributes, BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            return "error";
-        } else {
-            Card card = cardService.findCardById(cardId);
-            cardService.updateCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), pin, card);
-            redirectAttributes.addFlashAttribute("successMessage", "Account blocked successfully!");
-        }
-        return "redirect:cards";
-
-    }
-
     @PostMapping({"/block-card"})
     public String blockCard(@RequestParam("cardId") Long cardId, RedirectAttributes redirectAttributes){
         Card card = cardService.findCardById(cardId);

@@ -6,8 +6,8 @@
     <link href="/css/styles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body>
-<div th:insert="/menu.html :: div"></div>
+<body onload="getSavedItem()">
+<div id="menu" th:insert="/menu.html :: div"></div>
 <div class="main--content">
     <div class="header--wrapper">
         <div class="header--title">
@@ -19,7 +19,7 @@
                 <i class="bi bi-search"></i>
                 <input type="text" placeholder="Search">
             </div>
-            <img src="pictures/Desktop.png" alt="#"/>
+            <i class="bi bi-person-circle"></i>
         </div>
     </div>
     <div class="tabular--wrapper">
@@ -33,6 +33,7 @@
                                 th:value="${account.id}" th:text = "${account.id} +' ' +'('+${account.currency}+')'">
                         </option>
                     </select>
+                    <input type="hidden" th:field="${transactionModel.account.id}" />
                 </div>
                 <div class="form-group">
                     <label for="destinationAccountNumber" class="form-label">Destination Account Number:</label>

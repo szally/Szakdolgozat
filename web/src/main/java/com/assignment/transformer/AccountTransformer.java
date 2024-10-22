@@ -33,6 +33,7 @@ public class AccountTransformer {
             accountModel.setCurrency(account.getCurrency());
             accountModel.setOpeningDate(account.getOpeningDate());
             accountModel.setStatus(account.getStatus());
+            accountModel.setType(account.getType());
             accountModel.setIban(account.getIban());
             accountModel.setCustomer(account.getCustomer());
             accountModel.setCard(account.getCard());
@@ -55,6 +56,7 @@ public class AccountTransformer {
             account.setCurrency(accountModel.getCurrency());
             account.setOpeningDate(accountModel.getOpeningDate());
             account.setStatus(accountModel.getStatus());
+            account.setType(accountModel.getType());
             account.setIban(accountModel.getIban());
             account.setCustomer(accountModel.getCustomer());
             account.setCard(accountModel.getCard());

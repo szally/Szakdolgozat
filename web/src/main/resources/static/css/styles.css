@@ -430,3 +430,27 @@ tfoot td{
    .dropdown:hover .transfer-menu {
      display: block;
    }
+
+
+.gamification--font{
+    font-size: 2em; /* Nagyobb betűméret */
+    display: inline-block;
+}
+
+.bi-trophy-fill {
+    color: gold; /* Aranysárga szín a trófea ikonnak */
+    font-size: 5em;
+}
+
+.points-info {
+    font-size: 1em;
+    color: #666;
+    margin-top: 10px;
+    text-align: center;
+    padding-left: 100px;
+}
+
+.bi-person-circle{
+    font-size: 2em;
+    color: rgba(113, 99, 186, 255);
+}

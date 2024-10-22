@@ -18,6 +18,7 @@ public class AccountModel {
     private String currency;
     private Date openingDate;
     private AccountAndCardStatus status;
+    private AccountType type;
     private Iban iban;
     private Customer customer;
     private Card card;

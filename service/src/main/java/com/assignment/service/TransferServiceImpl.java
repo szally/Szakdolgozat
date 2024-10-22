@@ -29,7 +29,10 @@ public class TransferServiceImpl implements TransferService {
     PartnerBankRepository partnerBankRepository;
 
     @Autowired
-    IbanRepository ibanRepository;
+    GamificationService gamificationService;
+
+    @Autowired
+    CustomerRepository customerRepository;
 
     @Override
     public void transferBetweenOwnAccounts(Long sourceAccountNumber, Long destinationAccountNumber, double amount,  String currency, String description, Customer customer) throws InsufficientFundsException {
@@ -70,11 +73,16 @@ public class TransferServiceImpl implements TransferService {
             throw new InsufficientFundsException("Insufficient funds in source account");
         }
 
+        if(destinationAccount.getType().equals(AccountType.SAVING)){
+            gamificationService.updatePointsForSavings(customer, amount, currency);
+        }
+
         accountRepository.save(sourceAccount);
         accountRepository.save(destinationAccount);
 
         customer.getTransactionList().add(transaction);
         transactionRepository.save(transaction);
+        customerRepository.save(customer);
     }
 
     @Override
@@ -175,42 +183,18 @@ public class TransferServiceImpl implements TransferService {
         transaction.setStatus(TransactionStatus.PROCESSED);
         transaction.setCustomer(customer);
 
+
         accountRepository.save(sourceAccount);
         customer.getTransactionList().add(transaction);
         transactionRepository.save(transaction);
     }
 
     @Override
-    public void valueDatedTransfer(long sourceAccountNumber, long toAccount, double amount, String currency, Customer customer) throws InsufficientFundsException {
-        Account sourceAccount = accountRepository.findAccountById(sourceAccountNumber);
-        if (sourceAccount == null || toAccount == 0 || amount <= 0) {
-            throw new IllegalArgumentException("Invalid arguments");
-        }
-        if (sourceAccount.getBalance() < amount) {
-            throw new InsufficientFundsException("Insufficient funds");
-        }
+    public void chequePayment(long sourceAccountNumber, long toAccount, double amount, String currency, Customer customer) throws InsufficientFundsException {
 
-        Transactions transaction = new Transactions();
-        transaction.setAccount(sourceAccount);
-        transaction.setPartnerAccountNumb(toAccount);
-        transaction.setAmount(amount);
-        transaction.setCustomer(customer);
-
-
-        double amountToTransfer;
-        if(!transaction.getCurrency().equals(sourceAccount.getCurrency())){
-            amountToTransfer = convertAmount(currency, sourceAccount.getCurrency(), amount);
-            sourceAccount.setBalance(sourceAccount.getBalance() - amountToTransfer);
-        }
-        else {
-            sourceAccount.setBalance(sourceAccount.getBalance() - amount);
-        }
-        customer.getTransactionList().add(transaction);
-        accountRepository.save(sourceAccount);
-        transactionRepository.save(transaction);
     }
 
-    private double convertAmount(String sourceCurrency, String targetCurrency, double amount) {
+    public double convertAmount(String sourceCurrency, String targetCurrency, double amount) {
         ExchangeRate exchangeRate = exchangeRateRepository.findByBaseCurrencyAndTargetCurrency(sourceCurrency, targetCurrency);
         if (exchangeRate == null) {
             throw new IllegalArgumentException("Exchange rate not found for currencies: " + sourceCurrency + " and " + targetCurrency);

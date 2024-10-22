@@ -57,13 +57,14 @@ INSERT INTO IBAN (iban, country)
 VALUES
     ('HU123456789012345678901234', 'Hungary'),
     ('HU123456789012345678901235', 'Hungary'),
+    ('HU123456789012345678901535', 'Hungary'),
     ('HU123456789012345678901236', 'Hungary'),
     ('HU123456789012345678901237', 'Hungary');
 
-INSERT INTO customer (id, username, password, name, birth_place, birth_date, mothers_name, id_card_numb, tax_numb, email, status)
+INSERT INTO customer (id, username, password, name, birth_place, birth_date, mothers_name, id_card_numb, tax_numb, email, status, points)
 VALUES
-  (1, 'nagys', 'ns-secret', 'Nagy Sándor', 'Nyíregyháza', '1985-05-15', 'Nagy Mária', 'HU1234567890', 23456789, 'nagysandor@example.com', 'ACTIVE'),
-  (2, 'kovacsa', 'ka-secret', 'Kovács Anna', 'Miskolc', '1990-12-20', 'Kovács Éva', 'HU9876543210', 45678901, 'kovacsanna@example.com', 'BLOCKED');
+  (1, 'nagys', 'ns-secret', 'Nagy Sándor', 'Nyíregyháza', '1985-05-15', 'Nagy Mária', 'HU1234567890', 23456789, 'nagysandor@example.com', 'ACTIVE', 50),
+  (2, 'kovacsa', 'ka-secret', 'Kovács Anna', 'Miskolc', '1990-12-20', 'Kovács Éva', 'HU9876543210', 45678901, 'kovacsanna@example.com', 'BLOCKED', 0);
 ALTER TABLE customer ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM customer) + 1;
 
 
@@ -74,12 +75,13 @@ VALUES
  (10003, 'Kovács Anna', '2023-11-10', 9012, 'BLOCKED', 'DEBIT', 2);
 ALTER TABLE card ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM card) + 1;
 
-INSERT INTO account (id, balance, currency, opening_date, status, card_id, iban_iban, customer_id)
+INSERT INTO account (id, balance, currency, opening_date, status, type, card_id, iban_iban, customer_id)
 VALUES
-  (1001, 5000.00, 'EUR', '2023-01-01', 'ACTIVE', 10002, 'HU123456789012345678901234',1),
-  (1002, 1000.00, 'USD', '2024-03-15', 'ACTIVE', 10001, 'HU123456789012345678901235',1),
-  (1003, 2000.00, 'HUF', '2022-10-05', 'TERMINATED', NULL, 'HU123456789012345678901236',2),
-  (1004, 0.00, 'EUR', '2024-07-20', 'TERMINATED', 10003, 'HU123456789012345678901237',2);
+  (1001, 5000.00, 'EUR', '2023-01-01', 'ACTIVE', 'SAVING', 10002, 'HU123456789012345678901234',1),
+  (1002, 1000.00, 'USD', '2024-03-15', 'ACTIVE', 'LOAN',10001, 'HU123456789012345678901235',1),
+  (1005, 1000.00, 'USD', '2024-03-15', 'ACTIVE', 'CURRENT',10001, 'HU123456789012345678901535',1),
+  (1003, 2000.00, 'HUF', '2022-10-05', 'TERMINATED','CURRENT', NULL, 'HU123456789012345678901236',2),
+  (1004, 0.00, 'EUR', '2024-07-20', 'TERMINATED','LOAN', 10003, 'HU123456789012345678901237',2);
 ALTER TABLE account ALTER COLUMN id RESTART WITH (SELECT MAX(ID) FROM account) + 1;
 
 

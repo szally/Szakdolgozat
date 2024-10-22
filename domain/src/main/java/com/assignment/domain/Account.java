@@ -28,6 +28,9 @@ public class Account {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private AccountAndCardStatus status;
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
     @OneToOne
     private Iban iban;
     @ManyToOne

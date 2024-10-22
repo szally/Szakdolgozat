@@ -10,5 +10,4 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transactions, Long> {
-    List<Transactions> findByBookingDate(Date now);
 }

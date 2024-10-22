@@ -58,7 +58,6 @@ public class TransferController {
     @GetMapping({"/transfer-between-own-accounts"})
     public String showTransferBetweenOwnAccount(Model model) {
         model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
-
         model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         return "transfer-between-own-accounts";
     }
