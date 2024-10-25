@@ -1,50 +1,35 @@
 package com.assignment.controller;
 
 import com.assignment.domain.Account;
-import com.assignment.domain.Customer;
-import com.assignment.domain.PartnerBank;
-import com.assignment.model.AccountModel;
 import com.assignment.model.PartnerBankModel;
-import com.assignment.model.TransactionListModel;
 import com.assignment.model.TransactionsModel;
 import com.assignment.security.CustomerLoginDetailsService;
 import com.assignment.service.AccountServiceImpl;
 import com.assignment.service.CustomerDetailsServiceImpl;
-import com.assignment.service.TransactionHistoryServiceImpl;
 import com.assignment.service.TransferServiceImpl;
 import com.assignment.service.exceptions.InsufficientFundsException;
 import com.assignment.service.exceptions.InvalidIbanException;
 import com.assignment.service.exceptions.PartnerBankNotFoundException;
-import com.assignment.transformer.TransactionTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class TransferController {
 
-
     @Autowired
     CustomerDetailsServiceImpl customerDetailsService;
-
     @Autowired
     CustomerLoginDetailsService customerLoginDetailsService;
-
     @Autowired
     TransferServiceImpl transferService;
-
     @Autowired
     AccountServiceImpl accountService;
 
-    @ModelAttribute("accountModel")
-    public AccountModel getAccountModel(){
-        return new AccountModel();
-    }
     @ModelAttribute("transactionModel")
     public TransactionsModel getTransactionModel(){
         return new TransactionsModel();
@@ -79,7 +64,6 @@ public class TransferController {
     @GetMapping({"/domestic-transfer"})
     public String showDomesticTransfer(Model model) {
         model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
-
         model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         return "domestic-transfer";
     }
@@ -102,17 +86,9 @@ public class TransferController {
     @GetMapping({"/international-transfer"})
     public String showInternationalTransfer(Model model, @ModelAttribute("partnerBankModel") PartnerBankModel partnerBankModel) {
         model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
-
         model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         return "international-transfer";
     }
-
-  /*  @GetMapping({"/international-transfer"})
-    public String showPartnerBank(Model model, @ModelAttribute("partnerBankModel") PartnerBankModel partnerBankModel, @RequestParam("swiftCode") String swift) {
-        //model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
-        model.addAttribute("partnerBanks", this.transferService.findPartnerBankBySwift(swift));
-        return "international-transfer";
-    }*/
 
     @PostMapping({"/international-transfer"})
     public String internationalTransfer

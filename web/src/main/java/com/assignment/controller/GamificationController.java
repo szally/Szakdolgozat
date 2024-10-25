@@ -13,18 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class GamificationController {
     @Autowired
     private CustomerLoginDetailsService customerLoginDetailsService;
-
     @Autowired
     CustomerDetailsServiceImpl customerDetailsService;
-
     @Autowired
     AccountServiceImpl accountService;
 
-    @Autowired
-    CardServiceImpl cardService;
-
     @GetMapping("/gamification")
-    public String home(Model model) {
+    public String gamification(Model model) {
         model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
         model.addAttribute("customersSavingAccount", this.accountService.getSavingAccount(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         return "gamification";

@@ -30,24 +30,15 @@ public class CardController {
     @Autowired
     CardServiceImpl cardService;
 
-    @Autowired
-    CardTransformer cardTransformer;
     @ModelAttribute("cardModel")
     public CardModel getCardModel(){
         return new CardModel();
-    }
-
-    @ModelAttribute("cardListModel")
-    public CardListModel getCardListModel() {
-        return new CardListModel(this.cardTransformer
-                .transformCardListToCardModelList(this.cardService.getCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()))));
     }
 
     @GetMapping({"/cards"})
     public String showCards(Model model) {
         model.addAttribute("customersCards", cardService.getCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
-
         return "cards";
     }
 

@@ -23,21 +23,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class SettingsController {
 
-
     @Autowired
     private CustomerLoginDetailsService customerLoginDetailsService;
-
     @Autowired
     CustomerDetailsServiceImpl customerDetailsService;
-
     @Autowired
     AccountServiceImpl accountService;
-
     @Autowired
     CardServiceImpl cardService;
 
     @GetMapping("/settings")
-    public String home(Model model) {
+    public String settings(Model model) {
         model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
         model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         model.addAttribute("customersCards", this.cardService.getCardDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));

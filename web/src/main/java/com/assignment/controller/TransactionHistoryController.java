@@ -17,30 +17,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class TransactionHistoryController {
 
-
-    @Autowired
-    TransactionTransformer transactionTransformer;
-
     @Autowired
     CustomerDetailsServiceImpl customerDetailsService;
-
     @Autowired
     CustomerLoginDetailsService customerLoginDetailsService;
-
     @Autowired
     TransactionHistoryServiceImpl transactionService;
-
-
-    @ModelAttribute("transactionModel")
-    public TransactionsModel getTransactionModel(){
-        return new TransactionsModel();
-    }
-
-    @ModelAttribute("transactionListModel")
-    public TransactionListModel getAccountListModel() {
-        return new TransactionListModel(this.transactionTransformer
-                .transformTransactionsListToTransactionsModelList(this.transactionService.getTransactionHistory(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()))));
-    }
 
     @GetMapping({"/transactions"})
     public String showTransactionHistory(Model model) {

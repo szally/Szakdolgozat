@@ -2,13 +2,10 @@ package com.assignment.controller;
 
 import com.assignment.domain.Account;
 import com.assignment.domain.AccountType;
-import com.assignment.domain.Customer;
-import com.assignment.model.AccountListModel;
 import com.assignment.model.AccountModel;
 import com.assignment.security.CustomerLoginDetailsService;
 import com.assignment.service.AccountServiceImpl;
 import com.assignment.service.CustomerDetailsServiceImpl;
-import com.assignment.transformer.AccountTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,25 +24,13 @@ public class AccountController {
     CustomerDetailsServiceImpl  customerDetailsService;
 
     @Autowired
-    AccountTransformer accountTransformer;
-
-    @Autowired
     CustomerLoginDetailsService customerLoginDetailsService;
-
-
-    public AccountController() {
-    }
 
     @ModelAttribute("accountModel")
     public AccountModel getAccountModel(){
         return new AccountModel();
     }
 
-    @ModelAttribute("accountListModel")
-    public AccountListModel getAccountListModel() {
-        return new AccountListModel(this.accountTransformer
-                .transformAccountListToAccountModelList(this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()))));
-    }
 
     @GetMapping({"/accounts"})
     public String showAccounts(Model model) {
@@ -57,7 +42,6 @@ public class AccountController {
 
     @PostMapping({"/open-new-account"})
     public String addNewAccount(String currency, AccountType accountType, RedirectAttributes redirectAttributes) {
-            //Account account = this.accountTransformer.transformAccountModelToAccount(accountModel);
             this.accountService.openNewAccount(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()), currency,accountType);
             redirectAttributes.addFlashAttribute("successMessage", "Game added successfully!");
 
