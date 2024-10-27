@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class TransactionHistoryController {
@@ -29,19 +30,5 @@ public class TransactionHistoryController {
         model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
         model.addAttribute("customersTransactions", this.transactionService.getTransactionHistory(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
         return "transaction-history";
-    }
-
-    @GetMapping({"/transactions-download-json"})
-    public String downloadTransactionHistoryJSON() {
-        String filePath = "exports/TransactionHistory.json";
-        this.transactionService.downloadTransactionHistoryInJSON(this.transactionService.getTransactionHistory(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())), filePath);
-        return "redirect:transaction-history";
-    }
-
-    @GetMapping({"/transactions-download-csv"})
-    public String downloadTransactionHistoryCSV() {
-        String filePath = "exports/TransactionHistory.json";
-        this.transactionService.writeToCSV(this.transactionService.getTransactionHistory(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())), filePath);
-        return "redirect:transaction-history";
     }
 }

@@ -108,4 +108,27 @@ public class TransferController {
         return "redirect:international-transfer";
     }
 
+    @GetMapping({"/cheque-payment"})
+    public String showChequePayment(Model model) {
+        model.addAttribute("customer", this.customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
+        model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
+        return "cheque-payment";
+    }
+
+    @PostMapping({"/cheque-payment"})
+    public String chequePayment
+            (@ModelAttribute("transactionModel") TransactionsModel transactionModel,Model model, RedirectAttributes redirectAttributes,Long sourceAccountNumber, Long destinationAccountNumber,double amount, String description, String partner)
+            throws InsufficientFundsException {
+        model.addAttribute("customersAccount", this.accountService.getAccountDetails(customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername())));
+        sourceAccountNumber = transactionModel.getAccount().getId();
+        Account sourceAccount = accountService.findAccountById(sourceAccountNumber);
+        destinationAccountNumber = transactionModel.getPartnerAccountNumb();
+        partner = transactionModel.getPartnerName();
+        this.transferService.chequePayment(sourceAccountNumber, destinationAccountNumber,amount, "HUF",  description,partner, customerDetailsService.findCustomerByUsername(customerLoginDetailsService.loadAuthenticatedUsername()));
+        redirectAttributes.addFlashAttribute("successMessage", "Transfer successful!");
+
+        return "redirect:cheque-payment";
+    }
+
+
 }

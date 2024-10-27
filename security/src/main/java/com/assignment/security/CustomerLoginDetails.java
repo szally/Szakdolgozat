@@ -1,10 +1,13 @@
 package com.assignment.security;
 
 import com.assignment.domain.Customer;
+import com.assignment.domain.CustomerStatus;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 public class CustomerLoginDetails implements UserDetails {
 
@@ -16,7 +19,10 @@ public class CustomerLoginDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        CustomerStatus customerStatus = this.customer.getStatus();
+        Collection<GrantedAuthority> authorities = new HashSet<GrantedAuthority>(customerStatus.ordinal());
+        authorities.add(new SimpleGrantedAuthority("STATUS_" + customerStatus));
+        return authorities;
     }
 
     @Override

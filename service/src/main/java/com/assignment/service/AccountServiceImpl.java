@@ -48,15 +48,19 @@ public class AccountServiceImpl implements AccountService{
 
 
     @Override
-    public void blockAccount(Account account) {;
-        account.setStatus(AccountAndCardStatus.BLOCKED);
-        accountRepository.save(account);
+    public void blockAccount(Account account) {
+        if(account.getStatus().equals(AccountAndCardStatus.ACTIVE)){
+            account.setStatus(AccountAndCardStatus.BLOCKED);
+            accountRepository.save(account);
+        }
     }
 
     @Override
     public void unBlockAccount(Account account) {
-        account.setStatus(AccountAndCardStatus.ACTIVE);
-        accountRepository.save(account);
+        if(account.getStatus().equals(AccountAndCardStatus.BLOCKED)) {
+            account.setStatus(AccountAndCardStatus.ACTIVE);
+            accountRepository.save(account);
+        }
     }
 
     @Override

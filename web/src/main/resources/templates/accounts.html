@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <script type="text/javascript" src="/css/scripts.js"></script>
+    <script type="text/javascript" src="/javascript/scripts.js"></script>
     <title>Account Management</title>
     <link href="/css/styles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body onload="getSavedItem()">
+<body onload="getSavedItem()" sec:authorize="hasAuthority('STATUS_ACTIVE') or hasAuthority('STATUS_NEW')">
 <div id="menu" th:insert="/menu.html :: div"></div>
 <div class="main--content">
     <div class="header--wrapper">
@@ -43,7 +43,7 @@
                     <td th:text="${account.id}"/>
                     <td th:text="${account.balance}"/>
                     <td th:text="${account.currency}"/>
-                    <td th:text="${account.openingDate}"/>
+                    <td th:text="${#dates.format(account.openingDate, 'yyyy-MM-dd')}"/>
                     <td th:text="${account.status}"/>
                     <td th:text="${account.type}"/>
                     <td th:text="${account?.iban?.iban?: 'N/A'}"/>

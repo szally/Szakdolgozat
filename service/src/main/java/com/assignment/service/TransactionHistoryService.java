@@ -9,6 +9,4 @@ import java.util.List;
 @Service
 public interface TransactionHistoryService {
     List<Transactions>  getTransactionHistory(Customer customer);
-    void downloadTransactionHistoryInJSON(List<Transactions> transactions, String filePath);
-    void writeToCSV(List<Transactions> transactions, String filePath);
 }

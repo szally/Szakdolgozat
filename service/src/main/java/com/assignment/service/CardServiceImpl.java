@@ -24,14 +24,18 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public void blockCard(Card card) {
-        card.setStatus(AccountAndCardStatus.BLOCKED);
-        cardRepository.save(card);
+        if(card.getStatus().equals(AccountAndCardStatus.ACTIVE)) {
+            card.setStatus(AccountAndCardStatus.BLOCKED);
+            cardRepository.save(card);
+        }
     }
 
     @Override
     public void unBlockCard(Card card) {
-        card.setStatus(AccountAndCardStatus.ACTIVE);
-        cardRepository.save(card);
+        if(card.getStatus().equals(AccountAndCardStatus.BLOCKED)) {
+            card.setStatus(AccountAndCardStatus.ACTIVE);
+            cardRepository.save(card);
+        }
     }
 
     @Override

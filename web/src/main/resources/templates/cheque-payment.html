@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <script type="text/javascript" src="/javascript/scripts.js"></script>
+    <title>Cheque Payment</title>
+    <link href="/css/styles.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body onload="getSavedItem()" sec:authorize="hasAuthority('STATUS_ACTIVE') or hasAuthority('STATUS_NEW')">
+<div id="menu" th:insert="/menu.html :: div"></div>
+<div class="main--content">
+    <div class="header--wrapper">
+        <div class="header--title">
+            <span th:text="'You are logged in as: ' + ${customer.name}"></span>
+            <h2>Cheque Payment</h2>
+        </div>
+        <div class="user--info">
+            <div class="search--box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search">
+            </div>
+            <i class="bi bi-person-circle"></i>
+        </div>
+    </div>
+    <div class="tabular--wrapper">
+        <div class="table--container">
+            <div class="check">
+                <div class="check-header"><h3>Cheque Payment</h3>
+                </div>
+                <div class="check-body">
+                    <form th:action="@{/cheque-payment}" th:object="${transactionModel}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="check-form">
+                                    <label for="amount">Amount:</label>
+                                    <input type="number" th:field="${transactionModel.amount}" id="amount" required> HUF</input>
+                                </div>
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="red-square">
+                                    <i class="bi bi-mailbox-flag"></i>
+                            </div>
+                            </div>
+                                <div class="col-md-3">
+                                <div class="check-form">
+                                    <label for="description">Description:</label>
+                                    <textarea th:field="${transactionModel.description}" id="description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="check-form">
+                                    <label for="partnerName">Partner's name:</label>
+                                    <input type="text" th:field="${transactionModel.partnerName}" id="partnerName"
+                                           required>
+                                    <label for="destinationAccountNumber">Destination Account Number:</label>
+                                    <input type="number" th:field="${transactionModel.partnerAccountNumb}"
+                                           id="destinationAccountNumber" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            <div class="check-form">
+                                <label for="sourceAccountNumber">Source Account Number:</label>
+                                <select th:field="${transactionModel.account.id}" id="sourceAccountNumber"
+                                        class="form-select" required>
+                                    <option th:each="account : ${customersAccount}"
+                                            th:value="${account.id}"
+                                            th:text="${account.id} +' ' +'('+${account.currency}+')'">
+                                    </option>
+                                </select>
+                                <input type="hidden" th:field="${transactionModel.account.id}"/>
+                                <span th:text="${customer.name}"></span>
+                            </div>
+                            </div>
+                        </div>
+                        <button type="submit">Transfer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

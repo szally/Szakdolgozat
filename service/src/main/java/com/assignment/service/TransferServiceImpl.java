@@ -159,7 +159,7 @@ public class TransferServiceImpl implements TransferService {
             convertAmount(currency, sourceAccount.getCurrency(), amount);
         }
 
-        double totalFee = calculateTransferFee(amount, partnerBank.getTransferFeeInEUR(), currency);
+        double totalFee = calculateTotalFee(amount, partnerBank.getTransferFeeInEUR(), currency);
 
         if(!sourceAccount.getCurrency().equals("EUR")) {
             convertAmount("EUR", sourceAccount.getCurrency(), totalFee);
@@ -190,8 +190,42 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public void chequePayment(long sourceAccountNumber, long toAccount, double amount, String currency, Customer customer) throws InsufficientFundsException {
+    public void chequePayment(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer) throws InsufficientFundsException {
+        List<Account> accountList = accountRepository.findAll();
+        Transactions transaction = new Transactions();
+        if (sourceAccountNumber == null || destinationAccountNumber == null || amount <= 0) {
+            throw new IllegalArgumentException("Invalid input parameters.");
+        }
+        Account sourceAccount = accountRepository.findAccountById(sourceAccountNumber);
 
+
+        transaction.setAccount(sourceAccount);
+        transaction.setAmount(amount);
+        transaction.setCurrency("HUF");
+        transaction.setCreationDate(Date.from(Instant.now()));
+        transaction.setPartnerName(partner);
+        transaction.setPartnerAccountNumb(destinationAccountNumber);
+        transaction.setDescription(description);
+        transaction.setStatus(TransactionStatus.PROCESSED);
+        transaction.setCustomer(customer);
+
+        if (sourceAccount.getBalance() <= 0) {
+            transaction.setStatus(TransactionStatus.FAILED);
+            throw new InsufficientFundsException("Insufficient funds in source account");
+        }
+
+        double amountToTransfer;
+
+        if(!transaction.getCurrency().equals(sourceAccount.getCurrency())){
+            amountToTransfer = convertAmount(currency, sourceAccount.getCurrency(), amount);
+            sourceAccount.setBalance(sourceAccount.getBalance() - amountToTransfer);
+        }
+        else {
+            sourceAccount.setBalance(sourceAccount.getBalance() - amount);
+        }
+        accountRepository.save(sourceAccount);
+        customer.getTransactionList().add(transaction);
+        transactionRepository.save(transaction);
     }
 
     public double convertAmount(String sourceCurrency, String targetCurrency, double amount) {
@@ -208,16 +242,16 @@ public class TransferServiceImpl implements TransferService {
         return amount * exchangeRateDouble;
     }
 
-    private double calculateTransferFee(double transferAmount, double partnerBankFeeInEUR, String currency) {
+    private double calculateTotalFee(double transferAmount, double partnerBankFeeInEUR, String currency) {
         if (transferAmount < 0 || partnerBankFeeInEUR < 0) {
             throw new IllegalArgumentException("Invalid input parameters: transferAmount or partnerBankFeeInEUR cannot be negative.");
         }
 
         double amountInEUR = convertAmount(currency, "EUR", transferAmount);
 
-        double transferFee = amountInEUR + partnerBankFeeInEUR;
+        double totalFee = amountInEUR + partnerBankFeeInEUR;
 
-        return transferFee;
+        return totalFee;
     }
 
     public PartnerBank findPartnerBankBySwift(String swift){

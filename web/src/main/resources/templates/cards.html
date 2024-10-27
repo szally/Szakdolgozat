@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <script type="text/javascript" src="/css/scripts.js"></script>
+    <script type="text/javascript" src="/javascript/scripts.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Card Management</title>
     <link href="/css/styles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body onload="getSavedItem()">
+<body onload="getSavedItem()" sec:authorize="hasAuthority('STATUS_ACTIVE') or hasAuthority('STATUS_NEW')">
 <div id="menu" th:insert="/menu.html :: div"></div>
 <div class="main--content">
     <div class="header--wrapper">
@@ -41,7 +41,7 @@
                 <tr th:each="card : ${customersCards}">
                     <td th:text="${card.id}"/>
                     <td th:text="${card.customerName}"/>
-                    <td th:text="${card.expiryDate}"/>
+                    <td th:text="${#dates.format(card.expiryDate, 'yyyy-MM-dd')}"/>
                     <td th:text="${card.type}"/>
                     <td th:text="${card.status}"/>
                     <td>

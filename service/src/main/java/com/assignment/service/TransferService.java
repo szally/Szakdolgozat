@@ -15,5 +15,5 @@ public interface TransferService {
 
     void internationalTransfer(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer, String iban, String swift) throws InsufficientFundsException, PartnerBankNotFoundException, InvalidIbanException;
 
-    void chequePayment(long sourceAccountNumber, long toAccount, double amount, String currency, Customer customer) throws InsufficientFundsException;
+    void chequePayment(Long sourceAccountNumber, Long destinationAccountNumber, double amount, String currency, String description, String partner, Customer customer) throws InsufficientFundsException;
 }
